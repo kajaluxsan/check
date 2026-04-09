@@ -1,50 +1,64 @@
-// Shared domain types used across the rent checker.
+// Shared domain types used across FairMiete.
 
 export type CantonCode =
   | "ZH" | "BE" | "LU" | "UR" | "SZ" | "OW" | "NW" | "GL" | "ZG"
   | "FR" | "SO" | "BS" | "BL" | "SH" | "AR" | "AI" | "SG" | "GR"
   | "AG" | "TG" | "TI" | "VD" | "VS" | "NE" | "GE" | "JU";
 
-export type RoomKey =
-  | "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "4.5" | "5" | "5.5" | "6";
+export interface GeoPoint {
+  lat: number;
+  lon: number;
+}
 
-export type Noise = "quiet" | "normal" | "loud" | "veryLoud";
-export type Floor = "ground" | "low" | "mid" | "high";
-export type Condition = "new" | "renovated" | "good" | "old" | "needsWork";
+export interface NominatimResult extends GeoPoint {
+  displayName: string;
+  city?: string;
+  town?: string;
+  village?: string;
+  postcode?: string;
+  canton?: CantonCode;
+  country?: string;
+}
 
-export interface Canton {
-  code: CantonCode;
+export type PoiCategory =
+  | "parking"
+  | "supermarket"
+  | "school"
+  | "pharmacy"
+  | "doctor"
+  | "restaurant"
+  | "station";
+
+export interface Poi extends GeoPoint {
+  id: string;
+  category: PoiCategory;
   name: string;
-  nameFr?: string;
-  region: "Deutschschweiz" | "Romandie" | "Tessin";
-  /** Median monthly gross rent (CHF) by room count. */
-  rents: Record<RoomKey, number>;
+  distanceM: number;
 }
 
-export interface CheckInput {
-  canton: CantonCode | string;
-  rooms: RoomKey | string;
-  size: number; // m²
-  price: number; // CHF / month
-  noise: Noise;
-  floor: Floor;
-  condition: Condition;
+export interface TransportStop extends GeoPoint {
+  id: string;
+  name: string;
+  distanceM: number;
 }
 
-export type Verdict = "steal" | "fair" | "slightly" | "overpriced" | "scam";
-
-export interface CheckResult {
-  canton: Canton;
-  expected: number;
-  expectedLow: number;
-  expectedHigh: number;
-  actual: number;
-  diff: number;
-  diffPct: number;
-  verdict: Verdict;
-  pricePerSqm: number;
-  headline: string;
-  summary: string;
-  advice: string[];
-  modifiers: { label: string; value: number }[];
+export interface TransportDeparture {
+  time: string; // HH:MM
+  destination: string;
+  category: string;
+  number: string;
 }
+
+export interface NoiseReading {
+  roadDb: number | null;
+  railDb: number | null;
+}
+
+export interface TaxInfo {
+  municipalityTax: number; // percent
+  cantonName: string;
+  population?: number;
+  vacancyRate?: number;
+}
+
+export type Verdict = "great" | "fair" | "slightly" | "overpriced";

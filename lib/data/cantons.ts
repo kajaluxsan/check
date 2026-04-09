@@ -1,4 +1,16 @@
-import type { Canton, CantonCode } from "../types";
+import type { CantonCode } from "../types";
+
+export type RoomKey =
+  | "1" | "1.5" | "2" | "2.5" | "3" | "3.5" | "4" | "4.5" | "5" | "5.5" | "6";
+
+export interface Canton {
+  code: CantonCode;
+  name: string;
+  nameFr?: string;
+  region: "Deutschschweiz" | "Romandie" | "Tessin";
+  /** Median monthly gross rent (CHF) by room count. */
+  rents: Record<RoomKey, number>;
+}
 
 /**
  * All 26 Swiss cantons with approximate median monthly gross rents (CHF, inkl. NK)

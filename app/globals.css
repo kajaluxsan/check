@@ -3,16 +3,68 @@
 @tailwind utilities;
 
 :root {
-  --bg: #fafafa;
-  --fg: #0a0a0a;
-}
-
-html, body {
-  background: var(--bg);
-  color: var(--fg);
-  -webkit-font-smoothing: antialiased;
+  --bg: #0a0a0a;
+  --bg-elev: #141414;
+  --bg-elev-2: #1c1c1c;
+  --border: #262626;
+  --fg: #f5f5f5;
+  --fg-muted: #a3a3a3;
+  --fg-dim: #737373;
+  --accent: #c8f035;
+  --accent-dark: #a7cc2c;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-serif {
+  font-family: "DM Serif Display", Georgia, serif;
+}
+
+/* Leaflet dark tweaks */
+.leaflet-container {
+  background: #0a0a0a !important;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: #999 !important;
+}
+.leaflet-control-attribution a {
+  color: #bbb !important;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
 }

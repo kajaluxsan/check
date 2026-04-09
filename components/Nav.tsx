@@ -1,43 +1,33 @@
 import Link from "next/link";
 
+const LINKS = [
+  { href: "/analyse", label: "Analyse" },
+  { href: "/rechner", label: "Rechner" },
+  { href: "/mietrecht", label: "Mietrecht" },
+  { href: "/ueber", label: "Über uns" },
+];
+
 export default function Nav() {
   return (
-    <header className="border-b border-neutral-200 bg-white/80 backdrop-blur sticky top-0 z-30">
+    <header className="sticky top-0 z-40 border-b border-ink-border bg-ink-bg/80 backdrop-blur">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-          <span className="inline-flex w-8 h-8 rounded-lg bg-brand-600 text-white items-center justify-center">
-            ✓
+        <Link href="/" className="flex items-center gap-2">
+          <span className="inline-flex w-8 h-8 rounded-lg bg-lime-accent text-ink-bg items-center justify-center font-bold">
+            F
           </span>
-          <span>check</span>
-          <span className="text-neutral-400 font-normal text-sm hidden sm:inline">
-            · Fair Rent Switzerland
-          </span>
+          <span className="font-serif text-xl tracking-tight">FairMiete</span>
+          <span className="text-ink-dim text-sm hidden sm:inline">.ch</span>
         </Link>
-        <nav className="flex items-center gap-1 sm:gap-2 text-sm">
-          <Link
-            href="/checker"
-            className="px-3 py-2 rounded-md text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100"
-          >
-            Checker
-          </Link>
-          <Link
-            href="/alerts"
-            className="px-3 py-2 rounded-md text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100"
-          >
-            Alerts
-          </Link>
-          <Link
-            href="/about"
-            className="px-3 py-2 rounded-md text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100"
-          >
-            Über uns
-          </Link>
-          <Link
-            href="/checker"
-            className="ml-2 inline-flex items-center px-4 py-2 rounded-md bg-brand-600 text-white font-medium hover:bg-brand-700"
-          >
-            Jetzt prüfen
-          </Link>
+        <nav className="flex items-center gap-1 text-sm">
+          {LINKS.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="px-3 py-2 rounded-md text-ink-mute hover:text-white hover:bg-ink-elev transition"
+            >
+              {l.label}
+            </Link>
+          ))}
         </nav>
       </div>
     </header>

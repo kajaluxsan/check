@@ -8,17 +8,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          900: "#1e3a8a",
+        ink: {
+          bg: "#0a0a0a",
+          elev: "#141414",
+          elev2: "#1c1c1c",
+          border: "#262626",
+          mute: "#a3a3a3",
+          dim: "#737373",
+        },
+        lime: {
+          accent: "#c8f035",
+          dark: "#a7cc2c",
         },
       },
       fontFamily: {
-        sans: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
+        sans: ['"DM Sans"', "system-ui", "sans-serif"],
+        serif: ['"DM Serif Display"', "Georgia", "serif"],
       },
     },
   },

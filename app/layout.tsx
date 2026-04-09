@@ -4,9 +4,9 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Check – Faire Mietpreise für die Schweiz",
+  title: "FairMiete.ch – Alles was du über deine Wohnung wissen musst",
   description:
-    "Prüfe in 30 Sekunden, ob deine Mietwohnung überteuert ist. Basierend auf offiziellen BFS-Daten der Schweiz.",
+    "Prüfe in Sekunden ob deine Miete fair ist, analysiere die Umgebung und kenne deine Rechte. Kostenlos, ohne Login.",
 };
 
 export default function RootLayout({
@@ -16,7 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body className="min-h-screen flex flex-col">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-screen flex flex-col bg-ink-bg text-white antialiased">
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
