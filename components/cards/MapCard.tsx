@@ -25,9 +25,9 @@ const CATEGORIES: { value: PoiCategory; label: string; icon: string }[] = [
   { value: "parking", label: "Parkplatz", icon: "🅿️" },
 ];
 
-const MAX_RADIUS = 20000;
+const MAX_RADIUS = 10000;
 
-const RADIUS_OPTIONS = [200, 300, 500, 750, 1000, 3000, 5000, 10000, 15000, 20000];
+const RADIUS_OPTIONS = [200, 300, 500, 750, 1000, 3000, 5000, 10000];
 
 function formatRadius(r: number): string {
   return r >= 1000 ? `${r / 1000} km` : `${r} m`;
@@ -113,18 +113,21 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
             <Map center={center} pois={filtered} radiusM={radius} />
           </div>
 
-          <div className="mt-4">
-            <div className="text-xs text-ink-mute mb-2">Radius</div>
-            <div className="flex flex-wrap gap-1.5">
+          <div className="mt-4 rounded-xl bg-ink-bg border border-ink-border p-3">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="text-xs text-ink-dim uppercase tracking-wide">Radius</div>
+              <div className="text-sm font-medium text-white">{formatRadius(radius)}</div>
+            </div>
+            <div className="grid grid-cols-4 gap-1.5">
               {RADIUS_OPTIONS.map((r) => (
                 <button
                   key={r}
                   type="button"
                   onClick={() => setRadius(r)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
+                  className={`py-2 rounded-lg text-xs font-medium border transition ${
                     radius === r
                       ? "bg-lime-accent text-ink-bg border-lime-accent"
-                      : "bg-ink-bg text-ink-mute border-ink-border hover:text-white hover:border-ink-mute"
+                      : "bg-ink-elev text-ink-mute border-ink-border hover:text-white hover:border-ink-mute"
                   }`}
                 >
                   {formatRadius(r)}
