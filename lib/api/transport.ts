@@ -14,8 +14,8 @@ export async function findNearestStop(
   point: GeoPoint,
 ): Promise<TransportStop | null> {
   const params = new URLSearchParams({
-    x: point.lon.toString(),
-    y: point.lat.toString(),
+    x: point.lat.toString(),
+    y: point.lon.toString(),
     type: "station",
   });
   const res = await fetch(
