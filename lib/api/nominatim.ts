@@ -21,7 +21,7 @@ export async function geocodeAddress(
     `https://nominatim.openstreetmap.org/search?${params.toString()}`,
     {
       headers: {
-        "User-Agent": "FairMiete.ch/1.0",
+        "User-Agent": "checkmiete.ch/1.0",
         Accept: "application/json",
       },
     },

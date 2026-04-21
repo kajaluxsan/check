@@ -7,9 +7,9 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-2 mb-3">
             <span className="inline-flex w-6 h-6 rounded-md bg-lime-accent text-ink-bg items-center justify-center text-xs font-bold">
-              F
+              C
             </span>
-            <span className="font-serif text-lg">FairMiete.ch</span>
+            <span className="font-serif text-lg">checkmiete.ch</span>
           </div>
           <p className="text-ink-mute">
             Alles was du über deine Wohnung wissen musst. Gratis, unabhängig,
@@ -35,7 +35,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-ink-border py-4 text-center text-xs text-ink-dim">
-        © {new Date().getFullYear()} FairMiete.ch · Keine Rechtsberatung, keine Gewähr.
+        © {new Date().getFullYear()} checkmiete.ch · Keine Rechtsberatung, keine Gewähr.
       </div>
     </footer>
   );

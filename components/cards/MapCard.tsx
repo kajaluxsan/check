@@ -25,23 +25,26 @@ const CATEGORIES: { value: PoiCategory; label: string; icon: string }[] = [
   { value: "parking", label: "Parkplatz", icon: "🅿️" },
 ];
 
+const MAX_RADIUS = 1000;
+
 export default function MapCard({ center }: { center: GeoPoint | null }) {
   const [radius, setRadius] = useState(500);
-  const [pois, setPois] = useState<Poi[]>([]);
+  const [allPois, setAllPois] = useState<Poi[]>([]);
   const [active, setActive] = useState<Set<PoiCategory>>(
     new Set(CATEGORIES.map((c) => c.value)),
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch once with max radius — then filter client-side by selected radius.
   useEffect(() => {
     if (!center) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetchPois(center, radius)
+    fetchPois(center, MAX_RADIUS)
       .then((list) => {
-        if (!cancelled) setPois(list);
+        if (!cancelled) setAllPois(list);
       })
       .catch(() => {
         if (!cancelled) setError("Daten momentan nicht verfügbar.");
@@ -52,7 +55,7 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
     return () => {
       cancelled = true;
     };
-  }, [center, radius]);
+  }, [center]);
 
   function toggle(cat: PoiCategory) {
     setActive((prev) => {
@@ -63,7 +66,9 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
     });
   }
 
-  const filtered = pois.filter((p) => active.has(p.category));
+  const filtered = allPois.filter(
+    (p) => active.has(p.category) && p.distanceM <= radius,
+  );
 
   return (
     <Card
