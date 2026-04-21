@@ -23,10 +23,14 @@ export async function findNearestStop(
   );
   if (!res.ok) throw new Error(`transport.opendata.ch ${res.status}`);
   const data = (await res.json()) as { stations: RawStation[] };
-  const s = data.stations?.[0];
-  if (!s || !s.coordinate?.x || !s.coordinate?.y) return null;
-  const lat = s.coordinate.x;
-  const lon = s.coordinate.y;
+  // The first result is often a generic address with null coordinates.
+  // Skip entries without valid coordinates or without an id.
+  const s = (data.stations ?? []).find(
+    (st) => st.coordinate?.x != null && st.coordinate?.y != null && st.id,
+  );
+  if (!s) return null;
+  const lat = s.coordinate!.x!;
+  const lon = s.coordinate!.y!;
   return {
     id: s.id ?? s.name,
     name: s.name,
