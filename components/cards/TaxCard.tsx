@@ -34,7 +34,6 @@ export default function TaxCard({ canton }: { canton: CantonCode | null }) {
     <Card
       title="Steuern & Gemeinde"
       icon="🏛️"
-      source="BFS + ESTV Aggregate"
       loading={loading}
     >
       {data && (

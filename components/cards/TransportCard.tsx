@@ -70,7 +70,6 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
     <Card
       title="Öffentlicher Verkehr"
       icon="🚆"
-      source="transport.opendata.ch"
       loading={loading}
       error={error}
     >

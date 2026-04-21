@@ -48,7 +48,6 @@ export default function RentCheckCard({
     <Card
       title="Mietpreis-Check"
       icon="💰"
-      source="BFS Strukturerhebung"
       action={<Pill tone={tone}>{result.label}</Pill>}
     >
       <div className="grid grid-cols-3 gap-4 mb-4">

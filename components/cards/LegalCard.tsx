@@ -21,7 +21,6 @@ export default function LegalCard({
     <Card
       title="Rechtliche Schnellinfos"
       icon="⚖️"
-      source="OR Art. 253 ff. · BWO"
       className="md:col-span-2"
     >
       <div className="grid sm:grid-cols-2 gap-4">
