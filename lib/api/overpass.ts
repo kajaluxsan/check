@@ -16,6 +16,11 @@ const CATEGORY_QUERY: Record<PoiCategory, string> = {
   station:     '["railway"="station"]',
 };
 
+const ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
+
 export async function fetchPois(
   center: GeoPoint,
   radiusM: number,
@@ -30,19 +35,32 @@ export async function fetchPois(
 
   const limit = radiusM > 5000 ? 200 : 500;
   const query = `[out:json][timeout:30];(${parts});out center ${limit};`;
+  const body = "data=" + encodeURIComponent(query);
 
-  const res = await fetch("https://overpass-api.de/api/interpreter", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: "data=" + encodeURIComponent(query),
-  });
+  let lastError: Error | null = null;
 
-  if (!res.ok) throw new Error(`Overpass ${res.status}`);
-  const data = (await res.json()) as OverpassResponse;
+  for (const endpoint of ENDPOINTS) {
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+      if (res.status === 429 || res.status === 504) {
+        lastError = new Error(`Overpass ${res.status}`);
+        continue;
+      }
+      if (!res.ok) throw new Error(`Overpass ${res.status}`);
+      const data = (await res.json()) as OverpassResponse;
+      return (data.elements ?? [])
+        .map((el) => toPoi(el, center))
+        .filter((p): p is Poi => p !== null);
+    } catch (e) {
+      lastError = e instanceof Error ? e : new Error(String(e));
+    }
+  }
 
-  return (data.elements ?? [])
-    .map((el) => toPoi(el, center))
-    .filter((p): p is Poi => p !== null);
+  throw lastError ?? new Error("Overpass nicht erreichbar");
 }
 
 function toPoi(el: OverpassElement, center: GeoPoint): Poi | null {
