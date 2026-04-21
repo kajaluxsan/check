@@ -1,113 +1,130 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Card, { Pill } from "@/components/ui/Card";
-import { fetchNoise } from "@/lib/api/geoadmin";
-import type { GeoPoint, NoiseReading } from "@/lib/types";
+import { useState } from "react";
+import Card from "@/components/ui/Card";
+import {
+  getNoiseMapUrl,
+  NOISE_LEGEND,
+  ROAD_LAYER,
+  RAIL_LAYER,
+} from "@/lib/api/geoadmin";
+import type { GeoPoint } from "@/lib/types";
 
-function classify(db: number | null) {
-  if (db == null) return { tone: "mid" as const, label: "Unbekannt", emoji: "❔" };
-  if (db < 50) return { tone: "good" as const, label: "Ruhig", emoji: "🟢" };
-  if (db < 60) return { tone: "warn" as const, label: "Normal", emoji: "🟡" };
-  if (db < 70) return { tone: "mid" as const, label: "Laut", emoji: "🟠" };
-  return { tone: "bad" as const, label: "Sehr laut", emoji: "🔴" };
-}
+type NoiseMode = "road" | "rail";
 
 export default function NoiseCard({ center }: { center: GeoPoint | null }) {
-  const [data, setData] = useState<NoiseReading | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<NoiseMode>("road");
 
-  useEffect(() => {
-    if (!center) return;
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    fetchNoise(center)
-      .then((r) => {
-        if (!cancelled) setData(r);
-      })
-      .catch(() => {
-        if (!cancelled) setError("Daten momentan nicht verfügbar.");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [center]);
+  if (!center) {
+    return (
+      <Card title="Lärm & Umwelt" icon="🔊" error="Keine Koordinaten." />
+    );
+  }
 
-  const road = classify(data?.roadDb ?? null);
-  const rail = classify(data?.railDb ?? null);
+  const layer = mode === "road" ? ROAD_LAYER : RAIL_LAYER;
+  const url = getNoiseMapUrl(layer, center);
 
   return (
     <Card
       title="Lärm & Umwelt"
       icon="🔊"
-      source="geo.admin.ch · BAFU"
-      loading={loading}
-      error={error}
+      source="geo.admin.ch · BAFU Lärmkartierung"
     >
-      <div className="space-y-4">
-        <NoiseRow
-          label="Strassenlärm"
-          db={data?.roadDb ?? null}
-          tone={road.tone}
-          rating={road.label}
-          emoji={road.emoji}
-        />
-        <NoiseRow
-          label="Bahnlärm"
-          db={data?.railDb ?? null}
-          tone={rail.tone}
-          rating={rail.label}
-          emoji={rail.emoji}
+      {/* Toggle road / rail */}
+      <div className="flex gap-2 mb-4">
+        <TabButton
+          active={mode === "road"}
+          onClick={() => setMode("road")}
+        >
+          Strassenlärm
+        </TabButton>
+        <TabButton
+          active={mode === "rail"}
+          onClick={() => setMode("rail")}
+        >
+          Bahnlärm
+        </TabButton>
+      </div>
+
+      {/* Noise map image */}
+      <div className="rounded-xl overflow-hidden border border-ink-border bg-ink-bg">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          key={`${mode}-${center.lat}-${center.lon}`}
+          src={url}
+          alt={`${mode === "road" ? "Strassen" : "Bahn"}lärm bei ${center.lat.toFixed(4)}, ${center.lon.toFixed(4)}`}
+          width={480}
+          height={300}
+          className="w-full h-auto"
+          loading="eager"
         />
       </div>
-      <div className="mt-5 text-xs text-ink-dim">
-        Werte in dB(A) Tagesmittel (Lden). 50 dB = Bibliothek, 70 dB = Verkehrslärm.
+
+      {/* Legend */}
+      <div className="mt-4">
+        <div className="text-xs uppercase tracking-wide text-ink-dim mb-2">
+          Legende (Lden Tagesmittel)
+        </div>
+        <div className="flex gap-0.5 rounded-lg overflow-hidden">
+          {NOISE_LEGEND.map((l) => (
+            <div
+              key={l.min}
+              className="flex-1 h-3"
+              style={{ backgroundColor: l.color }}
+              title={l.label}
+            />
+          ))}
+        </div>
+        <div className="flex justify-between text-[10px] text-ink-dim mt-1">
+          <span>&lt; 45 dB</span>
+          <span>55 dB</span>
+          <span>65 dB</span>
+          <span>&gt; 70 dB</span>
+        </div>
       </div>
+
+      {/* Context */}
+      <div className="mt-4 rounded-xl bg-ink-bg border border-ink-border p-3">
+        <div className="grid grid-cols-2 gap-2 text-xs text-ink-mute">
+          <div>🟢 Grün = Ruhig (&lt; 50 dB)</div>
+          <div>🟡 Gelb = Normal (50–55 dB)</div>
+          <div>🟠 Orange = Laut (55–65 dB)</div>
+          <div>🔴 Rot = Sehr laut (&gt; 65 dB)</div>
+        </div>
+      </div>
+
+      <a
+        href={`https://map.geo.admin.ch/?lang=de&layers=${layer}&E=${center.lon}&N=${center.lat}&zoom=8`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 inline-flex items-center text-xs text-lime-accent hover:underline"
+      >
+        Auf map.geo.admin.ch anzeigen →
+      </a>
     </Card>
   );
 }
 
-function NoiseRow({
-  label,
-  db,
-  tone,
-  rating,
-  emoji,
+function TabButton({
+  active,
+  onClick,
+  children,
 }: {
-  label: string;
-  db: number | null;
-  tone: "good" | "warn" | "mid" | "bad";
-  rating: string;
-  emoji: string;
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl bg-ink-bg border border-ink-border p-4">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-xs uppercase tracking-wide text-ink-dim">{label}</div>
-          <div className="font-serif text-3xl mt-1">
-            {db != null ? `${db.toFixed(0)} dB` : "—"}
-          </div>
-        </div>
-        <Pill tone={tone}>{emoji} {rating}</Pill>
-      </div>
-      {db != null && (
-        <div className="mt-3 h-1.5 rounded-full bg-ink-elev2 overflow-hidden">
-          <div
-            className={`h-full transition-all ${
-              tone === "good" ? "bg-lime-accent" :
-              tone === "warn" ? "bg-yellow-500" :
-              tone === "mid" ? "bg-orange-500" : "bg-red-500"
-            }`}
-            style={{ width: `${Math.min(100, Math.max(0, ((db - 30) / 50) * 100))}%` }}
-          />
-        </div>
-      )}
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-4 py-2 rounded-lg text-sm font-medium border transition ${
+        active
+          ? "bg-lime-accent text-ink-bg border-lime-accent"
+          : "bg-ink-bg text-ink-mute border-ink-border hover:text-white"
+      }`}
+    >
+      {children}
+    </button>
   );
 }

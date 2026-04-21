@@ -49,11 +49,6 @@ export interface TransportDeparture {
   number: string;
 }
 
-export interface NoiseReading {
-  roadDb: number | null;
-  railDb: number | null;
-}
-
 export interface TaxInfo {
   municipalityTax: number; // percent
   cantonName: string;
