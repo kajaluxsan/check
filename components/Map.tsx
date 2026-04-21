@@ -1,6 +1,6 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { GeoPoint, Poi, PoiCategory } from "@/lib/types";
@@ -51,44 +51,72 @@ export default function Map({
   pois: Poi[];
   radiusM: number;
 }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+
+  // Initialize map
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const map = L.map(containerRef.current, {
+      center: [center.lat, center.lon],
+      zoom: 15,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [center.lat, center.lon]);
+
+  // Update overlays (circle, markers) when pois/radius change
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const layers: L.Layer[] = [];
+
+    const circle = L.circle([center.lat, center.lon], {
+      radius: radiusM,
+      color: "#c8f035",
+      fillColor: "#c8f035",
+      fillOpacity: 0.04,
+      weight: 1,
+    }).addTo(map);
+    layers.push(circle);
+
+    const homeMarker = L.marker([center.lat, center.lon], { icon: HOME_ICON })
+      .bindPopup("Deine Adresse")
+      .addTo(map);
+    layers.push(homeMarker);
+
+    for (const p of pois) {
+      const marker = L.marker([p.lat, p.lon], {
+        icon: emojiIcon(CATEGORY_ICON[p.category]),
+      })
+        .bindPopup(
+          `<div class="text-sm"><div class="font-semibold">${p.name}</div><div class="text-xs text-neutral-500">${p.distanceM} m</div></div>`
+        )
+        .addTo(map);
+      layers.push(marker);
+    }
+
+    return () => {
+      layers.forEach((l) => l.remove());
+    };
+  }, [center.lat, center.lon, pois, radiusM]);
+
   return (
-    <MapContainer
-      center={[center.lat, center.lon]}
-      zoom={15}
-      scrollWheelZoom={false}
+    <div
+      ref={containerRef}
       style={{ height: "100%", width: "100%", borderRadius: "12px" }}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      />
-      <Circle
-        center={[center.lat, center.lon]}
-        radius={radiusM}
-        pathOptions={{
-          color: "#c8f035",
-          fillColor: "#c8f035",
-          fillOpacity: 0.04,
-          weight: 1,
-        }}
-      />
-      <Marker position={[center.lat, center.lon]} icon={HOME_ICON}>
-        <Popup>Deine Adresse</Popup>
-      </Marker>
-      {pois.map((p) => (
-        <Marker
-          key={p.id}
-          position={[p.lat, p.lon]}
-          icon={emojiIcon(CATEGORY_ICON[p.category])}
-        >
-          <Popup>
-            <div className="text-sm">
-              <div className="font-semibold">{p.name}</div>
-              <div className="text-xs text-neutral-500">{p.distanceM} m</div>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    />
   );
 }
