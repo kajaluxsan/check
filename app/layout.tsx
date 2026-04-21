@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "FairMiete.ch – Alles was du über deine Wohnung wissen musst",
+  title: "checkmiete.ch – Alles was du über deine Wohnung wissen musst",
   description:
     "Prüfe in Sekunden ob deine Miete fair ist, analysiere die Umgebung und kenne deine Rechte. Kostenlos, ohne Login.",
 };

@@ -12,7 +12,7 @@ export default function UeberPage() {
           Gratis, unabhängig, aus Open Data gebaut.
         </h1>
         <p className="text-ink-mute mt-4 max-w-2xl text-lg">
-          FairMiete.ch kombiniert öffentliche Datenquellen zu einem Dashboard,
+          checkmiete.ch kombiniert öffentliche Datenquellen zu einem Dashboard,
           das dir hilft, deine Wohnung einzuschätzen — und deine Rechte zu kennen.
         </p>
       </div>
@@ -66,7 +66,7 @@ export default function UeberPage() {
       </section>
 
       <section className="mb-12 space-y-4">
-        <h2 className="font-serif text-2xl">Was FairMiete nicht ist</h2>
+        <h2 className="font-serif text-2xl">Was checkmiete nicht ist</h2>
         <ul className="space-y-2 text-ink-mute">
           <li>• Keine Rechtsberatung. Für verbindliche Auskünfte: Mieterverband.</li>
           <li>• Kein Immobilienportal — wir vermieten keine Wohnungen.</li>

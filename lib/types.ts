@@ -1,4 +1,4 @@
-// Shared domain types used across FairMiete.
+// Shared domain types used across checkmiete.
 
 export type CantonCode =
   | "ZH" | "BE" | "LU" | "UR" | "SZ" | "OW" | "NW" | "GL" | "ZG"

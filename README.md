@@ -1,8 +1,8 @@
-# FairMiete.ch
+# checkmiete.ch
 
 > Alles was du über deine Wohnung wissen musst — gratis, ohne Login, aus Open Data gebaut.
 
-FairMiete.ch ist ein Next.js-Dashboard, das Mieterinnen und Mietern in der
+checkmiete.ch ist ein Next.js-Dashboard, das Mieterinnen und Mietern in der
 Schweiz hilft, ihre Wohnung einzuschätzen. Aus einer einzigen Adresseingabe
 entsteht eine Analyse mit sechs parallelen Karten: Mietpreis-Vergleich,
 Umgebung, öffentlicher Verkehr, Lärm, Steuern und rechtliche Schnellinfos.
@@ -209,7 +209,7 @@ check/
 
 - Ausführliche Datenquellen-Erklärung
 - Liste aller 26 Kantone als Chips
-- Klarstellung "Was FairMiete nicht ist"
+- Klarstellung "Was checkmiete nicht ist"
 - Phase 1 vs Phase 2 Roadmap
 
 ---
@@ -440,7 +440,7 @@ prerendered. Dynamische Daten kommen zur Laufzeit im Browser.
 
 ## Rechtliches
 
-FairMiete.ch ist ein nicht-kommerzielles Informations-Tool. Die Seite:
+checkmiete.ch ist ein nicht-kommerzielles Informations-Tool. Die Seite:
 
 - ist **keine Rechtsberatung**. Für verbindliche Auskünfte wende dich an
   den [Schweizerischen Mieterverband](https://www.mieterverband.ch)

@@ -71,7 +71,7 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="text-center mb-12">
           <div className="text-sm uppercase tracking-[0.2em] text-lime-accent mb-2">
-            Warum FairMiete?
+            Warum checkmiete?
           </div>
           <h2 className="font-serif text-4xl sm:text-5xl">Gratis, was andere für 40 CHF/Monat verlangen</h2>
         </div>
@@ -89,7 +89,7 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="rounded-2xl bg-gradient-to-br from-lime-accent/15 to-lime-accent/5 border border-lime-accent/40 p-8">
-            <div className="text-sm uppercase tracking-wider text-lime-accent mb-1">FairMiete.ch</div>
+            <div className="text-sm uppercase tracking-wider text-lime-accent mb-1">checkmiete.ch</div>
             <div className="font-serif text-3xl mb-6 text-white">Gratis. Immer.</div>
             <ul className="space-y-3 text-white/90">
               <Row ok>Direkte Bewertung: fair oder nicht</Row>
