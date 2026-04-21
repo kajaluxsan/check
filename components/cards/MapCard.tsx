@@ -25,7 +25,13 @@ const CATEGORIES: { value: PoiCategory; label: string; icon: string }[] = [
   { value: "parking", label: "Parkplatz", icon: "🅿️" },
 ];
 
-const MAX_RADIUS = 1000;
+const MAX_RADIUS = 20000;
+
+const RADIUS_OPTIONS = [200, 300, 500, 750, 1000, 3000, 5000, 10000, 15000, 20000];
+
+function formatRadius(r: number): string {
+  return r >= 1000 ? `${r / 1000} km` : `${r} m`;
+}
 
 export default function MapCard({ center }: { center: GeoPoint | null }) {
   const [radius, setRadius] = useState(500);
@@ -109,19 +115,19 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
 
           <div className="mt-4">
             <div className="text-xs text-ink-mute mb-2">Radius</div>
-            <div className="flex gap-2">
-              {[200, 300, 500, 750, 1000].map((r) => (
+            <div className="flex flex-wrap gap-1.5">
+              {RADIUS_OPTIONS.map((r) => (
                 <button
                   key={r}
                   type="button"
                   onClick={() => setRadius(r)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium border transition ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
                     radius === r
                       ? "bg-lime-accent text-ink-bg border-lime-accent"
                       : "bg-ink-bg text-ink-mute border-ink-border hover:text-white hover:border-ink-mute"
                   }`}
                 >
-                  {r >= 1000 ? `${r / 1000} km` : `${r} m`}
+                  {formatRadius(r)}
                 </button>
               ))}
             </div>
@@ -135,7 +141,7 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
           )}
           {!loading && !error && (
             <div className="mt-3 text-xs text-ink-dim">
-              {filtered.length} Einträge im {radius}m-Radius
+              {filtered.length} Einträge im {formatRadius(radius)}-Radius
             </div>
           )}
         </>

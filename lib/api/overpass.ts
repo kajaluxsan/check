@@ -28,7 +28,8 @@ export async function fetchPois(
     })
     .join("\n");
 
-  const query = `[out:json][timeout:20];(${parts});out center 80;`;
+  const limit = radiusM > 5000 ? 200 : 500;
+  const query = `[out:json][timeout:30];(${parts});out center ${limit};`;
 
   const res = await fetch("https://overpass-api.de/api/interpreter", {
     method: "POST",
