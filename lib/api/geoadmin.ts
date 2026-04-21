@@ -1,97 +1,72 @@
 import type { GeoPoint, NoiseReading } from "../types";
 
-const IDENTIFY_URL = "https://api3.geo.admin.ch/rest/services/all/MapServer/identify";
-const CATALOG_URL = "https://api3.geo.admin.ch/rest/services/all/MapServer";
+/**
+ * geo.admin.ch noise data via WMS GetFeatureInfo.
+ *
+ * The BAFU noise layers (ch.bafu.laerm-strassenlaerm_tag, ch.bafu.laerm-bahnlaerm_tag)
+ * are raster layers without a GeoTable, so the REST MapServer/identify endpoint
+ * returns "No GeoTable". WMS GetFeatureInfo works for these raster layers.
+ */
 
-// Cache discovered layer IDs so we only look them up once.
-let roadLayerId: string | null | undefined;
-let railLayerId: string | null | undefined;
+const WMS_URL = "https://wms.geo.admin.ch/";
 
-async function discoverNoiseLayers(): Promise<{
-  road: string | null;
-  rail: string | null;
-}> {
-  if (roadLayerId !== undefined && railLayerId !== undefined) {
-    return { road: roadLayerId, rail: railLayerId };
-  }
-  try {
-    const res = await fetch(CATALOG_URL);
-    if (!res.ok) throw new Error(`catalog ${res.status}`);
-    const data = (await res.json()) as {
-      layers: { layerBodId: string }[];
-    };
-    const ids = (data.layers ?? []).map((l) => l.layerBodId);
+const ROAD_LAYER = "ch.bafu.laerm-strassenlaerm_tag";
+const RAIL_LAYER = "ch.bafu.laerm-bahnlaerm_tag";
 
-    // Find the first layer matching road noise (Strassenlärm Tag)
-    roadLayerId =
-      ids.find((id) => /laerm.*strassen.*tag/i.test(id)) ?? null;
-    railLayerId =
-      ids.find((id) => /laerm.*(bahn|eisenbahn).*tag/i.test(id)) ?? null;
-
-    console.log("[checkmiete] noise layers:", { roadLayerId, railLayerId });
-  } catch {
-    roadLayerId = null;
-    railLayerId = null;
-  }
-  return { road: roadLayerId, rail: railLayerId };
-}
-
-async function identifyLayer(
+async function getFeatureInfo(
   layer: string,
   point: GeoPoint,
 ): Promise<number | null> {
-  const delta = 0.001;
+  const delta = 0.0005;
+  // WMS 1.3.0 + EPSG:4326: BBOX order is lat_min,lon_min,lat_max,lon_max
   const bbox = [
-    point.lon - delta,
     point.lat - delta,
-    point.lon + delta,
+    point.lon - delta,
     point.lat + delta,
+    point.lon + delta,
   ].join(",");
 
   const params = new URLSearchParams({
-    geometry: `${point.lon},${point.lat}`,
-    geometryType: "esriGeometryPoint",
-    imageDisplay: "100,100,96",
-    mapExtent: bbox,
-    tolerance: "10",
-    layers: `all:${layer}`,
-    sr: "4326",
-    lang: "de",
-    returnGeometry: "false",
+    SERVICE: "WMS",
+    VERSION: "1.3.0",
+    REQUEST: "GetFeatureInfo",
+    LAYERS: layer,
+    QUERY_LAYERS: layer,
+    CRS: "EPSG:4326",
+    BBOX: bbox,
+    WIDTH: "101",
+    HEIGHT: "101",
+    I: "50",
+    J: "50",
+    INFO_FORMAT: "application/json",
   });
 
-  const res = await fetch(`${IDENTIFY_URL}?${params.toString()}`);
+  const res = await fetch(`${WMS_URL}?${params.toString()}`);
   if (!res.ok) return null;
-  const data = (await res.json()) as IdentifyResponse;
-  const first = data.results?.[0];
-  if (!first) return null;
 
-  const attrs = first.attributes ?? {};
+  const data = await res.json();
 
-  // Try known field names, then fall back to any numeric value in dB range.
-  for (const key of Object.keys(attrs)) {
-    const val = attrs[key];
+  // Response can be GeoJSON FeatureCollection or a plain object.
+  const features = data?.features ?? [];
+  if (features.length === 0) return null;
+
+  const props = features[0]?.properties ?? {};
+
+  // Scan all properties for a numeric dB value (20–100 range).
+  for (const val of Object.values(props)) {
     const n = typeof val === "number" ? val : parseFloat(String(val));
-    if (!Number.isNaN(n) && n >= 20 && n <= 100) return n;
+    if (!Number.isNaN(n) && n >= 20 && n <= 100) return Math.round(n);
   }
   return null;
 }
 
 export async function fetchNoise(point: GeoPoint): Promise<NoiseReading> {
-  const layers = await discoverNoiseLayers();
-
   const [road, rail] = await Promise.allSettled([
-    layers.road ? identifyLayer(layers.road, point) : Promise.resolve(null),
-    layers.rail ? identifyLayer(layers.rail, point) : Promise.resolve(null),
+    getFeatureInfo(ROAD_LAYER, point),
+    getFeatureInfo(RAIL_LAYER, point),
   ]);
   return {
     roadDb: road.status === "fulfilled" ? road.value : null,
     railDb: rail.status === "fulfilled" ? rail.value : null,
   };
-}
-
-interface IdentifyResponse {
-  results?: Array<{
-    attributes?: Record<string, unknown>;
-  }>;
 }
