@@ -28,7 +28,6 @@ export default function NoiseCard({ center }: { center: GeoPoint | null }) {
     <Card
       title="Lärm & Umwelt"
       icon="🔊"
-      source="geo.admin.ch · BAFU Lärmkartierung"
     >
       {/* Toggle road / rail */}
       <div className="flex gap-2 mb-4">

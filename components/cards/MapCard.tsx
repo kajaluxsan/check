@@ -27,7 +27,7 @@ const CATEGORIES: { value: PoiCategory; label: string; icon: string }[] = [
 
 const MAX_RADIUS = 10000;
 
-const RADIUS_OPTIONS = [200, 300, 500, 750, 1000, 3000, 5000, 10000];
+const RADIUS_OPTIONS = [250, 500, 750, 1000, 5000];
 
 function formatRadius(r: number): string {
   return r >= 1000 ? `${r / 1000} km` : `${r} m`;
@@ -80,7 +80,6 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
     <Card
       title="Umgebungskarte"
       icon="🗺️"
-      source="OpenStreetMap · Overpass"
       className="md:col-span-2"
     >
       {!center ? (
@@ -118,7 +117,7 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
               <div className="text-xs text-ink-dim uppercase tracking-wide">Radius</div>
               <div className="text-sm font-medium text-white">{formatRadius(radius)}</div>
             </div>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-5 gap-1.5">
               {RADIUS_OPTIONS.map((r) => (
                 <button
                   key={r}
