@@ -107,22 +107,24 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
             <Map center={center} pois={filtered} radiusM={radius} />
           </div>
 
-          <div className="mt-4 flex items-center gap-3">
-            <label className="text-xs text-ink-mute whitespace-nowrap">
-              Radius
-            </label>
-            <input
-              type="range"
-              min={200}
-              max={1000}
-              step={100}
-              value={radius}
-              onChange={(e) => setRadius(Number(e.target.value))}
-              className="flex-1 accent-lime-accent"
-            />
-            <span className="text-xs text-white font-mono w-12 text-right">
-              {radius} m
-            </span>
+          <div className="mt-4">
+            <div className="text-xs text-ink-mute mb-2">Radius</div>
+            <div className="flex gap-2">
+              {[200, 300, 500, 750, 1000].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setRadius(r)}
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium border transition ${
+                    radius === r
+                      ? "bg-lime-accent text-ink-bg border-lime-accent"
+                      : "bg-ink-bg text-ink-mute border-ink-border hover:text-white hover:border-ink-mute"
+                  }`}
+                >
+                  {r >= 1000 ? `${r / 1000} km` : `${r} m`}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading && (
