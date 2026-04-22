@@ -45,6 +45,7 @@ export async function geocodeAddress(
     postcode: addr.postcode,
     canton: isCanton(iso) ? iso : undefined,
     country: addr.country,
+    houseNumber: addr.house_number,
   };
 }
 
@@ -65,6 +66,7 @@ interface RawNominatim {
     village?: string;
     postcode?: string;
     country?: string;
+    house_number?: string;
     "ISO3166-2-lvl4"?: string;
   };
 }
