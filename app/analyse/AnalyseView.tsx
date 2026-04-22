@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import AddressSearch from "@/components/AddressSearch";
+import BuildingCard from "@/components/cards/BuildingCard";
 import LegalCard from "@/components/cards/LegalCard";
 import MapCard from "@/components/cards/MapCard";
 import NoiseCard from "@/components/cards/NoiseCard";
@@ -100,8 +101,12 @@ export default function AnalyseView() {
             rooms={rooms}
             actual={rent}
           />
-          <NoiseCard center={{ lat: geo.lat, lon: geo.lon }} />
+          <BuildingCard
+            center={{ lat: geo.lat, lon: geo.lon }}
+            hasHouseNumber={!!geo.houseNumber}
+          />
           <MapCard center={{ lat: geo.lat, lon: geo.lon }} />
+          <NoiseCard center={{ lat: geo.lat, lon: geo.lon }} />
           <TransportCard center={{ lat: geo.lat, lon: geo.lon }} />
           <TaxCard canton={geo.canton ?? null} />
           <LegalCard rent={rent} rooms={rooms} />
