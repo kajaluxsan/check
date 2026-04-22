@@ -13,6 +13,17 @@ const CATEGORY_ICON: Record<PoiCategory, string> = {
   doctor: "🏥",
   restaurant: "🍽️",
   station: "🚆",
+  bank: "🏦",
+  fuel: "⛽",
+  post: "📬",
+  sport: "🏋️",
+  park: "🌳",
+  library: "📚",
+  kiosk: "🏪",
+  kindergarten: "👶",
+  bus_tram: "🚌",
+  worship: "⛪",
+  culture: "🎭",
 };
 
 function emojiIcon(emoji: string) {

@@ -28,7 +28,18 @@ export type PoiCategory =
   | "pharmacy"
   | "doctor"
   | "restaurant"
-  | "station";
+  | "station"
+  | "bank"
+  | "fuel"
+  | "post"
+  | "sport"
+  | "park"
+  | "library"
+  | "kiosk"
+  | "kindergarten"
+  | "bus_tram"
+  | "worship"
+  | "culture";
 
 export interface Poi extends GeoPoint {
   id: string;
