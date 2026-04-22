@@ -20,9 +20,9 @@ function emojiIcon(emoji: string) {
     className: "",
     html: `<div style="
       display:inline-flex;align-items:center;justify-content:center;
-      width:30px;height:30px;border-radius:50%;background:#141414;
-      border:2px solid #c8f035;font-size:16px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.5);
+      width:30px;height:30px;border-radius:50%;background:var(--bg-elev);
+      border:2px solid var(--accent);font-size:16px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
     ">${emoji}</div>`,
     iconSize: [30, 30],
     iconAnchor: [15, 15],
@@ -34,9 +34,9 @@ const HOME_ICON = L.divIcon({
   className: "",
   html: `<div style="
     display:inline-flex;align-items:center;justify-content:center;
-    width:38px;height:38px;border-radius:50%;background:#c8f035;
-    border:3px solid #0a0a0a;font-size:18px;font-weight:bold;color:#0a0a0a;
-    box-shadow:0 2px 10px rgba(200,240,53,0.5);
+    width:38px;height:38px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--bg);font-size:18px;font-weight:bold;color:var(--bg);
+    box-shadow:0 2px 10px rgba(100,163,13,0.4);
   ">🏠</div>`,
   iconSize: [38, 38],
   iconAnchor: [19, 19],
@@ -64,7 +64,9 @@ export default function Map({
       scrollWheelZoom: false,
     });
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    const isLight = document.documentElement.classList.contains("light");
+    const tileStyle = isLight ? "light_all" : "dark_all";
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`, {
       attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
 
@@ -83,10 +85,11 @@ export default function Map({
 
     const layers: L.Layer[] = [];
 
+    const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
     const circle = L.circle([center.lat, center.lon], {
       radius: radiusM,
-      color: "#c8f035",
-      fillColor: "#c8f035",
+      color: accent,
+      fillColor: accent,
       fillOpacity: 0.04,
       weight: 1,
     }).addTo(map);

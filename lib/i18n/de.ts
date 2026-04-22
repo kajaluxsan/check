@@ -1,0 +1,317 @@
+const de = {
+  // Common
+  common: {
+    loading: "Lade Daten \u2026",
+    loadingMap: "Lade Karte \u2026",
+    error: "Daten momentan nicht verf\u00fcgbar.",
+    noCoordinates: "Keine Koordinaten verf\u00fcgbar.",
+    cantonNotFound: "Kanton nicht ermittelbar.",
+    source: "Quelle",
+    toAnalysis: "Zur Analyse \u2192",
+    startAnalysis: "Jetzt Analyse starten \u2192",
+    min: "Min.",
+    meters: "m",
+    chf: "CHF",
+    phase2: "Phase 2",
+  },
+
+  // Nav
+  nav: {
+    analyse: "Analyse",
+    rechner: "Rechner",
+    mietrecht: "Mietrecht",
+    about: "\u00dcber uns",
+  },
+
+  // Theme
+  theme: {
+    toggle: "Theme wechseln",
+    dark: "Dark",
+    light: "Light",
+    system: "System",
+  },
+
+  // Footer
+  footer: {
+    tagline: "Alles was du \u00fcber deine Wohnung wissen musst. Gratis, unabh\u00e4ngig, ohne Login.",
+    product: "Produkt",
+    addressAnalysis: "Adress-Analyse",
+    calculatorTools: "Rechner-Tools",
+    about: "\u00dcber uns",
+    disclaimer: "Keine Rechtsberatung, keine Gew\u00e4hr.",
+  },
+
+  // Home page
+  home: {
+    badge: "Gratis \u00b7 Ohne Login \u00b7 Open Data",
+    heroTitle1: "Alles was du \u00fcber",
+    heroTitle2: "deine Wohnung",
+    heroTitle3: "wissen musst",
+    heroSub: "Mietpreis, Umgebung, \u00d6V, L\u00e4rm, Steuern und deine Rechte \u2014 eine Adresse reicht.",
+    heroBrowser: "Alles passiert im Browser. Wir speichern nichts.",
+    toolsLabel: "Was du bekommst",
+    toolsTitle: "Vier Tools, eine Adresse",
+    tool1Title: "Mietpreis-Check",
+    tool1Text: "Vergleich gegen BFS-Mediane aller 26 Kantone. Fair oder \u00fcberteuert?",
+    tool2Title: "Umgebungs-Analyse",
+    tool2Text: "POIs, \u00d6V-Anschluss, Schulen, \u00c4rzte \u2013 alles auf einer Karte.",
+    tool3Title: "L\u00e4rm & Steuern",
+    tool3Text: "Strassen- und Bahnl\u00e4rm in dB, Gemeindesteuerfuss, Leerstandsquote.",
+    tool4Title: "Rechtliche Checks",
+    tool4Text: "Anfangsmiete, Kaution, K\u00fcndigung, Referenzzinssatz \u2014 konkret.",
+    whyLabel: "Warum checkmiete?",
+    whyTitle: "Gratis, was andere f\u00fcr 40 CHF/Monat verlangen",
+    othersLabel: "Andere Anbieter",
+    othersPrice: "CHF 40 / Monat",
+    others1: "Nur Inserate, keine Bewertung",
+    others2: "Login, Abo, Kleingedrucktes",
+    others3: "Vermieter als Kunden",
+    others4: "Keine Umgebungsdaten",
+    others5: "Keine Rechtshinweise",
+    usLabel: "checkmiete.ch",
+    usPrice: "Gratis. Immer.",
+    us1: "Direkte Bewertung: fair oder nicht",
+    us2: "Kein Login, keine Cookies",
+    us3: "Unabh\u00e4ngig und neutral",
+    us4: "Karte, L\u00e4rm, \u00d6V, Steuern",
+    us5: "Konkrete Rechtstipps",
+    ctaTitle: "Bereit? Eine Adresse reicht.",
+    ctaSub: "Keine Registrierung. Keine E-Mail. Kein Abo. Einfach Adresse eingeben und loslegen.",
+  },
+
+  // Address search
+  search: {
+    addressPlaceholder: "Strasse, Ort",
+    rooms: "Zi.",
+    rentPlaceholder: "Nettomiete",
+    submit: "Analysieren \u2192",
+    errorAddress: "Bitte gib eine g\u00fcltige Adresse ein.",
+    errorRent: "Bitte gib deine Nettomiete ein.",
+  },
+
+  // Analyse page
+  analyse: {
+    title: "Adress-Analyse",
+    subtitle: "Gib eine Adresse, deine Zimmerzahl und die Nettomiete ein.",
+    yourAnalysis: "Deine Analyse",
+    searching: "Suche Adresse \u2026",
+    notFound: "Adresse nicht gefunden. Bitte pr\u00e4ziser eingeben.",
+    geocodeError: "Geocoding-Dienst nicht erreichbar.",
+    tryAgain: "Probiere eine pr\u00e4zisere Adresse mit Ort und PLZ.",
+  },
+
+  // Map card
+  map: {
+    title: "Umgebungskarte",
+    station: "\u00d6V",
+    supermarket: "Laden",
+    school: "Schule",
+    pharmacy: "Apotheke",
+    doctor: "Arzt",
+    restaurant: "Essen",
+    parking: "Parkplatz",
+    radius: "Radius",
+    loadingPois: "Lade POIs \u2026",
+    loadingMore: "lade weitere \u2026",
+    entries: (count: number, radius: string) => `${count} Eintr\u00e4ge im ${radius}-Radius`,
+    yourAddress: "Deine Adresse",
+  },
+
+  // Rent check
+  rent: {
+    title: "Mietpreis-Check",
+    noData: "Keine Daten f\u00fcr diese Zimmerzahl.",
+    yourRent: "Deine Miete",
+    median: "Kantons-Median",
+    more: "Mehr",
+    less: "Weniger",
+    you: "du",
+    fair: "fair",
+  },
+
+  // Transport
+  transport: {
+    title: "\u00d6ffentlicher Verkehr",
+    nearestStop: "N\u00e4chste Haltestelle",
+    distance: "Distanz",
+    walkMin: (min: number) => `~${min} Min. zu Fuss`,
+    departures: "N\u00e4chste Abfahrten",
+    noData: "Keine Daten.",
+    journeyLabel: "Reisezeit zu einer anderen Adresse",
+    journeyPlaceholder: "z.B. Z\u00fcrich HB",
+    calculate: "Rechnen",
+    noConnection: "Keine Verbindung gefunden.",
+    journeyError: "Fehler beim Abrufen der Verbindung.",
+    connection: "Verbindung",
+    transfers: (n: number) => `${n}\u00d7 umsteigen`,
+    walkTo: (name: string) => `Fussweg \u2192 ${name}`,
+    direction: (dir: string, time: string) => `Richtung ${dir} \u00b7 an ${time}`,
+    noStop: "Keine Haltestelle in der N\u00e4he.",
+  },
+
+  // Tax
+  tax: {
+    title: "Steuern & Gemeinde",
+    taxBurden: "Steuerbelastung",
+    rank: (rank: number, total: number) => `Rang ${rank} / ${total}`,
+    vacancyRate: "Leerstandsquote",
+    tightMarket: "Sehr angespannter Markt",
+    relaxedMarket: "Entspannter Markt",
+    canton: (name: string) => `Kanton ${name}`,
+    population: (n: string) => `Einwohner: ${n}`,
+    phase2Note: "Werte sind kantonale Durchschnitte. Gemeindespezifische Werte folgen in Phase 2.",
+  },
+
+  // Noise
+  noise: {
+    title: "L\u00e4rm & Umwelt",
+    noCoords: "Keine Koordinaten.",
+    road: "Strassenlärm",
+    rail: "Bahnl\u00e4rm",
+    legend: "Legende (Lden Tagesmittel)",
+    quiet: "< 45 dB",
+    mid: "55 dB",
+    loud: "65 dB",
+    veryLoud: "> 70 dB",
+    greenQuiet: "Gr\u00fcn = Ruhig (< 50 dB)",
+    yellowNormal: "Gelb = Normal (50\u201355 dB)",
+    orangeLoud: "Orange = Laut (55\u201365 dB)",
+    redVeryLoud: "Rot = Sehr laut (> 65 dB)",
+    showOnMap: "Auf map.geo.admin.ch anzeigen \u2192",
+  },
+
+  // Building
+  building: {
+    title: "Geb\u00e4udedaten",
+    needHouseNumber: "Gib die genaue Adresse mit Hausnummer an, um weitere Informationen wie Baujahr, Heizungsart und Geb\u00e4udetyp anzuzeigen.",
+    notAvailable: "Geb\u00e4udedaten nicht verf\u00fcgbar.",
+    yearBuilt: "Baujahr",
+    heatingType: "Heizungstyp",
+    energySource: "Energietr\u00e4ger",
+    buildingType: "Geb\u00e4udetyp",
+    floors: "Stockwerke",
+    apartments: "Wohnungen",
+    area: "Geb\u00e4udefl\u00e4che",
+    egid: "EGID",
+    noDetails: "F\u00fcr dieses Geb\u00e4ude sind keine detaillierten Daten im GWR hinterlegt.",
+    noBuilding: "Kein Geb\u00e4ude an dieser Adresse im GWR gefunden.",
+    moreDetails: "Weitere Details",
+    volume: "Geb\u00e4udevolumen",
+    energyArea: "Energiebezugsfl\u00e4che",
+    shelter: "Schutzraum",
+    shelterYes: "Vorhanden",
+    shelterNo: "Keiner",
+    egrid: "EGRID",
+    municipality: "Gemeinde",
+    canton: "Kanton",
+    hotWater: "Warmwasser",
+    heating2: "Zweitheizung",
+    dwellings: "Wohnungsdetails",
+    dwellingNr: "Whg.",
+    dwellingFloor: "Stockwerk",
+    dwellingRooms: "Zimmer",
+    dwellingArea: "Fl\u00e4che",
+    dwellingKitchen: "K\u00fcche",
+  },
+
+  // Legal
+  legal: {
+    title: "Rechtliche Schnellinfos",
+    initialRent: "Anfangsmiete",
+    initialRentAnswer: (pct: number) => `Deine Anfangsmiete darf maximal ${pct}% \u00fcber der Vormiete liegen.`,
+    initialRentDetail: "Wenn der Vermieter mehr verlangt, kannst du innert 30 Tagen beim Schlichtungsamt anfechten (Art. 270 OR). Verlange das Formular zur Vormiete.",
+    maxDeposit: "Maximale Kaution",
+    maxDepositAnswer: (amount: string, months: number) => `${amount} (${months} Nettomieten)`,
+    maxDepositDetail: "Art. 257e OR: max. 3 Monatsmieten netto. Die Kaution geh\u00f6rt auf ein auf deinen Namen lautendes Sperrkonto.",
+    noticePeriod: "K\u00fcndigungsfrist",
+    noticePeriodAnswer: (months: number) => `${months} Monate auf gesetzliche K\u00fcndigungstermine.`,
+    noticePeriodDetail: "Meistens Ende M\u00e4rz, Juni, September. Kantonale Gebr\u00e4uche (z.B. Orts\u00fcblichkeit) gelten zus\u00e4tzlich.",
+    referenceRate: "Referenzzinssatz",
+    referenceRateAnswer: (rate: number) => `Aktuell: ${rate}%`,
+    referenceRateDetail: "Wenn der Zinssatz bei deinem Vertragsabschluss h\u00f6her war, hast du Anspruch auf eine Mietzinssenkung. \u2192 Berechne es im Rechner.",
+    reductionPossible: "Mietzinssenkung m\u00f6glich?",
+    disclaimer: "Dies sind Schnell-Infos zu den h\u00e4ufigsten Fragen \u2013 keine Rechtsberatung. F\u00fcr konkrete F\u00e4lle: Mieterverband (mieterverband.ch).",
+    roomsRef: (rooms: string, rent: string) => `Zimmer ber\u00fccksichtigt: ${rooms} \u00b7 Netto-Bezug: ${rent}`,
+  },
+
+  // Rechner page
+  rechner: {
+    label: "Rechner-Tools",
+    title: "Zwei konkrete Rechner",
+    subtitle: "Nummer 1 zeigt dir, ob du Anspruch auf eine Mietzinssenkung hast. Nummer 2 ob deine Miete zu deinem Einkommen passt.",
+    phase2: "Nebenkosten-Check und K\u00fcndigungsfrist-Rechner folgen in Phase 2.",
+    refTitle: "Referenzzinssatz-Rechner",
+    refRentLabel: "Aktuelle Nettomiete (CHF)",
+    refRateLabel: "Referenzzinssatz bei Vertragsabschluss (%)",
+    refCurrentRate: (rate: number) => `Aktueller Satz: ${rate}%`,
+    result: "Ergebnis",
+    reductionPossible: "Senkung m\u00f6glich",
+    noReduction: "Keine Senkung",
+    newRent: "Neue Miete",
+    savingsMonth: "Ersparnis / Monat",
+    savingsYear: "pro Jahr",
+    refNote: "Richte dein Begehren schriftlich an den Vermieter mit Bezug auf Art. 270a OR und den aktuellen BWO-Satz.",
+    affordTitle: "Tragbarkeits-Rechner",
+    affordIncomeLabel: "Nettoeinkommen / Monat (CHF)",
+    affordRentLabel: "Aktuelle Miete / Monat (CHF)",
+    budget: "Empfohlenes Budget",
+    budgetSub: "max. 1/3 des Einkommens",
+    burdenRate: "Belastungsquote",
+    rule: "33% (Faustregel)",
+  },
+
+  // Ueber page
+  ueber: {
+    label: "\u00dcber uns",
+    title: "Faire Mieten f\u00fcr alle.",
+    intro: "checkmiete.ch hilft dir, deine Wohnung objektiv einzusch\u00e4tzen. Mietpreis, Umgebung, \u00d6V, L\u00e4rm, Steuern und deine Rechte als Mieterin oder Mieter \u2014 alles aus einer einzigen Adresse.",
+    howTitle: "Wie es funktioniert",
+    step1Title: "Adresse eingeben",
+    step1Text: "Gib deine Adresse, die Zimmerzahl und die monatliche Nettomiete ein.",
+    step2Title: "Analyse erhalten",
+    step2Text: "checkmiete analysiert sechs Aspekte deiner Wohnung \u2014 von der Preisfairness bis zum n\u00e4chsten \u00d6V-Anschluss.",
+    step3Title: "Handeln",
+    step3Text: "Auf Basis der Ergebnisse kannst du verhandeln, anfechten oder einfach sicher sein, dass dein Preis stimmt.",
+    promiseTitle: "Unser Versprechen",
+    free: "Gratis",
+    freeText: "Kein Abo, kein Premium, keine versteckten Kosten. Heute nicht, morgen nicht.",
+    noLogin: "Ohne Login",
+    noLoginText: "Keine Registrierung, keine E-Mail, keine Cookies. Einfach nutzen.",
+    independent: "Unabh\u00e4ngig",
+    independentText: "Wir sind kein Vermieter-Portal. Wir verdienen nichts an Inseraten.",
+    transparent: "Transparent",
+    transparentText: "Alle Daten stammen aus \u00f6ffentlichen Quellen. Jede Karte zeigt ihre Quelle.",
+    importantTitle: "Wichtig zu wissen",
+    important1: "checkmiete ist keine Rechtsberatung. F\u00fcr verbindliche Ausk\u00fcnfte wende dich an den Mieterverband.",
+    important2: "Wir vermieten keine Wohnungen und sind kein Immobilienportal.",
+    important3: "Die Ergebnisse dienen der Orientierung \u2014 keine Garantie auf Vollst\u00e4ndigkeit.",
+    ctaTitle: "Probier\u2019s aus.",
+    ctaSub: "Eine Adresse reicht \u2014 30 Sekunden.",
+    sourcesTitle: "Datenquellen & Hinweise",
+    src1: "Mietpreise: BFS Strukturerhebung (opendata.swiss)",
+    src2: "Karte & POIs: OpenStreetMap / Overpass API",
+    src3: "\u00d6V: transport.opendata.ch (SBB-Fahrplandaten)",
+    src4: "L\u00e4rm: geo.admin.ch / BAFU L\u00e4rmkartierung",
+    src5: "Steuern: ESTV / BFS Aggregate",
+    src6: "Recht: OR Art. 253 ff., BWO Referenzzinssatz",
+    srcNote: "Alle Daten sind \u00f6ffentlich zug\u00e4nglich. checkmiete speichert keine personenbezogenen Daten. Alle Berechnungen laufen lokal im Browser.",
+  },
+
+  // Mietrecht page
+  mietrecht: {
+    title: "Mietrecht-Ratgeber kommt bald",
+    text: "Wir arbeiten an gut aufbereiteten Antworten zu den h\u00e4ufigsten Fragen: Anfangsmiete anfechten, M\u00e4ngel melden, Kaution zur\u00fcckfordern, K\u00fcndigung korrekt einreichen und mehr.",
+    hint: "Bis dahin findest du die wichtigsten Schnell-Infos direkt in der Adress-Analyse.",
+  },
+};
+
+export default de;
+
+// Use a widened type so other locale files can assign different string values.
+type Widen<T> = T extends string
+  ? string
+  : T extends (...args: infer A) => infer R
+    ? (...args: A) => Widen<R>
+    : { [K in keyof T]: Widen<T[K]> };
+
+export type Translations = Widen<typeof de>;

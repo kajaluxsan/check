@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useT } from "@/lib/i18n/context";
 import AddressSearch from "@/components/AddressSearch";
 
 export default function HomePage() {
+  const { t } = useT();
+
   return (
     <div>
       {/* Hero */}
@@ -11,111 +16,94 @@ export default function HomePage() {
           <div className="absolute -bottom-40 right-0 w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-3xl" />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 pt-20 pb-28 sm:pt-32 sm:pb-40 text-center">
+        <div className="relative w-full mx-auto px-4 sm:px-6 lg:px-10 pt-20 pb-28 sm:pt-32 sm:pb-40 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink-elev border border-ink-border text-xs text-ink-mute mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-lime-accent" />
-            Gratis · Ohne Login · Open Data
+            {t.home.badge}
           </div>
           <h1 className="font-serif text-5xl sm:text-7xl tracking-tight leading-[1.05] text-white">
-            Alles was du über <br />
-            <span className="text-lime-accent">deine Wohnung</span> wissen musst
+            {t.home.heroTitle1} <br />
+            <span className="text-lime-accent">{t.home.heroTitle2}</span> {t.home.heroTitle3}
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-ink-mute max-w-2xl mx-auto">
-            Mietpreis, Umgebung, ÖV, Lärm, Steuern und deine Rechte —
-            eine Adresse reicht.
+            {t.home.heroSub}
           </p>
 
           <div className="mt-10 max-w-3xl mx-auto text-left">
             <AddressSearch />
             <p className="mt-3 text-xs text-ink-dim text-center">
-              Alles passiert im Browser. Wir speichern nichts.
+              {t.home.heroBrowser}
             </p>
           </div>
         </div>
       </section>
 
       {/* 4 Tool explainer */}
-      <section className="max-w-6xl mx-auto px-4 py-20">
+      <section className="w-full mx-auto px-4 sm:px-6 lg:px-10 py-20">
         <div className="text-center mb-12">
           <div className="text-sm uppercase tracking-[0.2em] text-lime-accent mb-2">
-            Was du bekommst
+            {t.home.toolsLabel}
           </div>
-          <h2 className="font-serif text-4xl sm:text-5xl">Vier Tools, eine Adresse</h2>
+          <h2 className="font-serif text-4xl sm:text-5xl">{t.home.toolsTitle}</h2>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <ToolCard
-            num="01"
-            title="Mietpreis-Check"
-            text="Vergleich gegen BFS-Mediane aller 26 Kantone. Fair oder überteuert?"
-          />
-          <ToolCard
-            num="02"
-            title="Umgebungs-Analyse"
-            text="POIs, ÖV-Anschluss, Schulen, Ärzte – alles auf einer Karte."
-          />
-          <ToolCard
-            num="03"
-            title="Lärm & Steuern"
-            text="Strassen- und Bahnlärm in dB, Gemeindesteuerfuss, Leerstandsquote."
-          />
-          <ToolCard
-            num="04"
-            title="Rechtliche Checks"
-            text="Anfangsmiete, Kaution, Kündigung, Referenzzinssatz — konkret."
-          />
+          <ToolCard num="01" title={t.home.tool1Title} text={t.home.tool1Text} />
+          <ToolCard num="02" title={t.home.tool2Title} text={t.home.tool2Text} />
+          <ToolCard num="03" title={t.home.tool3Title} text={t.home.tool3Text} />
+          <ToolCard num="04" title={t.home.tool4Title} text={t.home.tool4Text} />
         </div>
       </section>
 
       {/* Compare vs Homegate */}
-      <section className="max-w-6xl mx-auto px-4 py-20">
+      <section className="w-full mx-auto px-4 sm:px-6 lg:px-10 py-20">
         <div className="text-center mb-12">
           <div className="text-sm uppercase tracking-[0.2em] text-lime-accent mb-2">
-            Warum checkmiete?
+            {t.home.whyLabel}
           </div>
-          <h2 className="font-serif text-4xl sm:text-5xl">Gratis, was andere für 40 CHF/Monat verlangen</h2>
+          <h2 className="font-serif text-4xl sm:text-5xl">{t.home.whyTitle}</h2>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="rounded-2xl bg-ink-elev border border-ink-border p-8">
-            <div className="text-sm uppercase tracking-wider text-ink-dim mb-1">Andere Anbieter</div>
-            <div className="font-serif text-3xl mb-6">CHF 40 / Monat</div>
+            <div className="text-sm uppercase tracking-wider text-ink-dim mb-1">{t.home.othersLabel}</div>
+            <div className="font-serif text-3xl mb-6">{t.home.othersPrice}</div>
             <ul className="space-y-3 text-ink-mute">
-              <Row ok={false}>Nur Inserate, keine Bewertung</Row>
-              <Row ok={false}>Login, Abo, Kleingedrucktes</Row>
-              <Row ok={false}>Vermieter als Kunden</Row>
-              <Row ok={false}>Keine Umgebungsdaten</Row>
-              <Row ok={false}>Keine Rechtshinweise</Row>
+              <Row ok={false}>{t.home.others1}</Row>
+              <Row ok={false}>{t.home.others2}</Row>
+              <Row ok={false}>{t.home.others3}</Row>
+              <Row ok={false}>{t.home.others4}</Row>
+              <Row ok={false}>{t.home.others5}</Row>
             </ul>
           </div>
           <div className="rounded-2xl bg-gradient-to-br from-lime-accent/15 to-lime-accent/5 border border-lime-accent/40 p-8">
-            <div className="text-sm uppercase tracking-wider text-lime-accent mb-1">checkmiete.ch</div>
-            <div className="font-serif text-3xl mb-6 text-white">Gratis. Immer.</div>
+            <div className="text-sm uppercase tracking-wider text-lime-accent mb-1">{t.home.usLabel}</div>
+            <div className="font-serif text-3xl mb-6 text-white">{t.home.usPrice}</div>
             <ul className="space-y-3 text-white/90">
-              <Row ok>Direkte Bewertung: fair oder nicht</Row>
-              <Row ok>Kein Login, keine Cookies</Row>
-              <Row ok>Unabhängig und neutral</Row>
-              <Row ok>Karte, Lärm, ÖV, Steuern</Row>
-              <Row ok>Konkrete Rechtstipps</Row>
+              <Row ok>{t.home.us1}</Row>
+              <Row ok>{t.home.us2}</Row>
+              <Row ok>{t.home.us3}</Row>
+              <Row ok>{t.home.us4}</Row>
+              <Row ok>{t.home.us5}</Row>
             </ul>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="max-w-4xl mx-auto px-4 py-20">
+      <section className="w-full mx-auto px-4 sm:px-6 lg:px-10 py-20">
         <div className="rounded-3xl bg-ink-elev border border-ink-border p-10 sm:p-14 text-center">
           <h2 className="font-serif text-3xl sm:text-5xl text-white">
-            Bereit? Eine Adresse reicht.
+            {t.home.ctaTitle}
           </h2>
           <p className="mt-4 text-ink-mute max-w-xl mx-auto">
-            Keine Registrierung. Keine E-Mail. Kein Abo. Einfach Adresse eingeben und loslegen.
+            {t.home.ctaSub}
           </p>
           <Link
             href="/analyse"
             className="mt-8 inline-flex items-center px-6 py-3 rounded-xl bg-lime-accent text-ink-bg font-semibold hover:bg-lime-dark transition"
           >
-            Jetzt Analyse starten →
+            {t.common.startAnalysis}
           </Link>
         </div>
       </section>
@@ -141,7 +129,7 @@ function Row({ ok, children }: { ok: boolean; children: React.ReactNode }) {
           ok ? "bg-lime-accent text-ink-bg" : "bg-ink-border text-ink-dim"
         }`}
       >
-        {ok ? "✓" : "×"}
+        {ok ? "\u2713" : "\u00d7"}
       </span>
       <span>{children}</span>
     </li>

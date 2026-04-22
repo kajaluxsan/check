@@ -22,6 +22,9 @@
 # IDE
 .idea/
 
+# Docker
+.dockerignore
+
 # debug
 npm-debug.log*
 yarn-debug.log*

@@ -50,6 +50,25 @@ export interface TransportDeparture {
   number: string;
 }
 
+export interface JourneySection {
+  departureName: string;
+  departureTime: string; // HH:MM
+  arrivalName: string;
+  arrivalTime: string; // HH:MM
+  category: string; // e.g. "S", "IR", "Bus", or "walk"
+  line: string; // e.g. "S41"
+  direction: string;
+  isWalk: boolean;
+}
+
+export interface JourneyResult {
+  durationMin: number;
+  departure: string; // HH:MM
+  arrival: string; // HH:MM
+  transfers: number;
+  sections: JourneySection[];
+}
+
 export interface TaxInfo {
   municipalityTax: number; // percent
   cantonName: string;

@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import Card, { Pill } from "@/components/ui/Card";
+import { useT } from "@/lib/i18n/context";
 import {
   DEFAULT_NOTICE_MONTHS,
   MAX_DEPOSIT_MONTHS,
@@ -15,43 +17,43 @@ export default function LegalCard({
   rent: number;
   rooms: string;
 }) {
+  const { t } = useT();
   const maxDeposit = rent * MAX_DEPOSIT_MONTHS;
 
   return (
     <Card
-      title="Rechtliche Schnellinfos"
+      title={t.legal.title}
       icon="⚖️"
-      className="md:col-span-2"
+      className="md:col-span-2 xl:col-span-3"
     >
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <LegalItem
-          title="Anfangsmiete"
-          answer={`Deine Anfangsmiete darf maximal ${MAX_INITIAL_INCREASE_PCT}% über der Vormiete liegen.`}
-          detail="Wenn der Vermieter mehr verlangt, kannst du innert 30 Tagen beim Schlichtungsamt anfechten (Art. 270 OR). Verlange das Formular zur Vormiete."
+          title={t.legal.initialRent}
+          answer={t.legal.initialRentAnswer(MAX_INITIAL_INCREASE_PCT)}
+          detail={t.legal.initialRentDetail}
         />
         <LegalItem
-          title="Maximale Kaution"
-          answer={`${fmt(maxDeposit)} (${MAX_DEPOSIT_MONTHS} Nettomieten)`}
-          detail="Art. 257e OR: max. 3 Monatsmieten netto. Die Kaution gehört auf ein auf deinen Namen lautendes Sperrkonto."
+          title={t.legal.maxDeposit}
+          answer={t.legal.maxDepositAnswer(fmt(maxDeposit), MAX_DEPOSIT_MONTHS)}
+          detail={t.legal.maxDepositDetail}
         />
         <LegalItem
-          title="Kündigungsfrist"
-          answer={`${DEFAULT_NOTICE_MONTHS} Monate auf gesetzliche Kündigungstermine.`}
-          detail="Meistens Ende März, Juni, September. Kantonale Gebräuche (z.B. Ortsüblichkeit) gelten zusätzlich."
+          title={t.legal.noticePeriod}
+          answer={t.legal.noticePeriodAnswer(DEFAULT_NOTICE_MONTHS)}
+          detail={t.legal.noticePeriodDetail}
         />
         <LegalItem
-          title="Referenzzinssatz"
-          answer={`Aktuell: ${REFERENCE_RATE}%`}
-          detail={`Wenn der Zinssatz bei deinem Vertragsabschluss höher war, hast du Anspruch auf eine Mietzinssenkung. → Berechne es im Rechner.`}
-          pill={<Pill tone="good">Mietzinssenkung möglich?</Pill>}
+          title={t.legal.referenceRate}
+          answer={t.legal.referenceRateAnswer(REFERENCE_RATE)}
+          detail={t.legal.referenceRateDetail}
+          pill={<Link href="/rechner"><Pill tone="good">{t.legal.reductionPossible}</Pill></Link>}
         />
       </div>
       <div className="mt-5 text-xs text-ink-dim">
-        Dies sind Schnell-Infos zu den häufigsten Fragen – keine Rechtsberatung.
-        Für konkrete Fälle: Mieterverband (mieterverband.ch).
+        {t.legal.disclaimer}
       </div>
       <div className="mt-1 text-xs text-ink-dim">
-        Zimmer berücksichtigt: {rooms} · Netto-Bezug: {fmt(rent)}
+        {t.legal.roomsRef(rooms, fmt(rent))}
       </div>
     </Card>
   );

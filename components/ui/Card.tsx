@@ -1,4 +1,7 @@
+"use client";
+
 import { ReactNode } from "react";
+import { useT } from "@/lib/i18n/context";
 
 interface CardProps {
   title: string;
@@ -21,9 +24,10 @@ export default function Card({
   className = "",
   action,
 }: CardProps) {
+  const { t } = useT();
   return (
     <section
-      className={`rounded-2xl bg-ink-elev border border-ink-border p-6 ${className}`}
+      className={`rounded-2xl bg-ink-elev border border-ink-border p-4 sm:p-6 ${className}`}
     >
       <header className="flex items-start justify-between gap-4 mb-4">
         <div className="flex items-center gap-2">
@@ -37,7 +41,7 @@ export default function Card({
         <div className="py-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-ink-mute text-sm">
             <span className="inline-block w-4 h-4 border-2 border-ink-border border-t-lime-accent rounded-full animate-spin" />
-            Lade Daten …
+            {t.common.loading}
           </div>
         </div>
       )}
@@ -53,7 +57,7 @@ export default function Card({
 
       {source && !loading && (
         <div className="mt-4 pt-4 border-t border-ink-border text-xs text-ink-dim">
-          Quelle: {source}
+          {t.common.source}: {source}
         </div>
       )}
     </section>
@@ -82,7 +86,7 @@ export function Metric({
       <div className="text-xs uppercase tracking-wider text-ink-dim">
         {label}
       </div>
-      <div className={`text-2xl font-semibold mt-1 ${colors[tone ?? "neutral"]}`}>
+      <div className={`text-xl sm:text-2xl font-semibold mt-1 ${colors[tone ?? "neutral"]}`}>
         {value}
       </div>
       {sub && <div className="text-xs text-ink-mute mt-0.5">{sub}</div>}
