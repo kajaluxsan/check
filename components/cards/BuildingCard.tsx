@@ -39,7 +39,8 @@ export default function BuildingCard({
     return () => {
       cancelled = true;
     };
-  }, [center, hasHouseNumber, t]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [center, hasHouseNumber]);
 
   if (!hasHouseNumber) {
     return (

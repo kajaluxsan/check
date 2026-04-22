@@ -75,7 +75,8 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
     return () => {
       cancelled = true;
     };
-  }, [center?.lat, center?.lon, t]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [center?.lat, center?.lon]);
 
   const categoryLabels: Record<PoiCategory, string> = {
     station: t.map.station,

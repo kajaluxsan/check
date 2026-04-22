@@ -48,7 +48,8 @@ export default function AnalyseView() {
     return () => {
       cancelled = true;
     };
-  }, [address, t]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
 
   if (!address) {
     return (
