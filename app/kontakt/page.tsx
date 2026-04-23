@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Send } from "lucide-react";
-import { CONTACT_EMAIL } from "@/lib/config";
+import { Mail, Send, Loader2 } from "lucide-react";
 
 type Lang = "de" | "fr" | "it" | "en";
 
@@ -113,10 +112,11 @@ export default function KontaktPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const t = T[lang];
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -129,12 +129,24 @@ export default function KontaktPage() {
       return;
     }
 
-    const subject = encodeURIComponent(`checkmiete.ch Kontakt: ${firstName} ${lastName}`);
-    const body = encodeURIComponent(
-      `Vorname: ${firstName}\nNachname: ${lastName}\nE-Mail: ${email}\n\n${message}`,
-    );
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    setSent(true);
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastName, email, message }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? t.required);
+        return;
+      }
+      setSent(true);
+    } catch {
+      setError(t.required);
+    } finally {
+      setSending(false);
+    }
   }
 
   if (sent) {
@@ -242,10 +254,11 @@ export default function KontaktPage() {
 
         <button
           type="submit"
-          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-input bg-accent text-white font-semibold hover:bg-accent-hover transition"
+          disabled={sending}
+          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-input bg-accent text-white font-semibold hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
-          <Send className="w-4 h-4" />
-          {t.send}
+          {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {sending ? "…" : t.send}
         </button>
       </form>
 
