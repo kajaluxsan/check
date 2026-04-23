@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TrainFront } from "lucide-react";
 import Card, { Metric } from "@/components/ui/Card";
-import {
-  fetchDepartures,
-  fetchJourneyTime,
-  findNearestStop,
-} from "@/lib/api/transport";
+import { fetchDepartures, fetchJourneyTime, findNearestStop } from "@/lib/api/transport";
 import type { GeoPoint, TransportDeparture, TransportStop } from "@/lib/types";
 
 export default function TransportCard({ center }: { center: GeoPoint | null }) {
@@ -14,8 +11,6 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
   const [departures, setDepartures] = useState<TransportDeparture[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Journey calculator
   const [workAddr, setWorkAddr] = useState("");
   const [journeyMin, setJourneyMin] = useState<number | null>(null);
   const [journeyErr, setJourneyErr] = useState<string | null>(null);
@@ -41,9 +36,7 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [center]);
 
   async function onCalcJourney(e: React.FormEvent) {
@@ -54,25 +47,14 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
     setJourneyLoading(true);
     try {
       const m = await fetchJourneyTime(stop.name, workAddr);
-      if (m == null) {
-        setJourneyErr("Keine Verbindung gefunden.");
-      } else {
-        setJourneyMin(m);
-      }
-    } catch {
-      setJourneyErr("Fehler beim Abrufen der Verbindung.");
-    } finally {
-      setJourneyLoading(false);
-    }
+      if (m == null) setJourneyErr("Keine Verbindung gefunden.");
+      else setJourneyMin(m);
+    } catch { setJourneyErr("Fehler beim Abrufen."); }
+    finally { setJourneyLoading(false); }
   }
 
   return (
-    <Card
-      title="Öffentlicher Verkehr"
-      icon="🚆"
-      loading={loading}
-      error={error}
-    >
+    <Card title="Öffentlicher Verkehr" icon={TrainFront} loading={loading} error={error}>
       {stop ? (
         <>
           <div className="grid grid-cols-2 gap-4 mb-5">
@@ -85,16 +67,14 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
             />
           </div>
 
-          <div className="rounded-xl bg-ink-bg border border-ink-border p-3">
-            <div className="text-xs text-ink-dim uppercase tracking-wide mb-2">
-              Nächste Abfahrten
-            </div>
+          <div className="rounded-input bg-ink-bg border border-ink-border p-3">
+            <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim mb-2">Nächste Abfahrten</div>
             {departures.length > 0 ? (
               <ul className="divide-y divide-ink-border text-sm">
                 {departures.map((d, i) => (
                   <li key={i} className="py-2 flex items-center gap-3">
-                    <span className="font-mono text-white w-14">{d.time}</span>
-                    <span className="px-2 py-0.5 text-[11px] bg-ink-elev2 border border-ink-border rounded text-ink-mute">
+                    <span className="font-mono text-[var(--fg)] w-14">{d.time}</span>
+                    <span className="px-2 py-0.5 text-[11px] font-mono bg-accent-soft border border-accent-border rounded-[6px] text-accent">
                       {d.category} {d.number}
                     </span>
                     <span className="text-ink-mute truncate">→ {d.destination}</span>
@@ -107,33 +87,25 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
           </div>
 
           <form onSubmit={onCalcJourney} className="mt-5">
-            <label className="text-xs text-ink-mute block mb-1.5">
-              Reisezeit zu einer anderen Adresse
-            </label>
+            <label className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim block mb-1.5">Reisezeit berechnen</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={workAddr}
                 onChange={(e) => setWorkAddr(e.target.value)}
                 placeholder="z.B. Zürich HB"
-                className="flex-1 px-3 py-2 rounded-lg bg-ink-bg border border-ink-border text-sm text-white outline-none focus:border-lime-accent"
+                className="flex-1 px-3 py-2 rounded-input bg-ink-bg border border-ink-border text-sm text-[var(--fg)] outline-none focus:border-accent"
               />
               <button
                 type="submit"
                 disabled={!workAddr || journeyLoading}
-                className="px-4 py-2 rounded-lg bg-lime-accent text-ink-bg text-sm font-medium hover:bg-lime-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded-input bg-accent text-white text-sm font-medium hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Rechnen
+                Los
               </button>
             </div>
-            {journeyMin != null && (
-              <div className="mt-2 text-sm text-lime-accent">
-                Fahrzeit: {journeyMin} Min.
-              </div>
-            )}
-            {journeyErr && (
-              <div className="mt-2 text-sm text-red-400">{journeyErr}</div>
-            )}
+            {journeyMin != null && <div className="mt-2 text-sm font-mono text-status-good">Fahrzeit: {journeyMin} Min.</div>}
+            {journeyErr && <div className="mt-2 text-sm text-status-bad">{journeyErr}</div>}
           </form>
         </>
       ) : (

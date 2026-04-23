@@ -9,21 +9,43 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          bg: "#0a0a0a",
-          elev: "#141414",
-          elev2: "#1c1c1c",
-          border: "#262626",
-          mute: "#a3a3a3",
-          dim: "#737373",
+          bg: "var(--bg)",
+          elev: "var(--bg-elev)",
+          elev2: "var(--bg-elev-2)",
+          border: "var(--border)",
+          "border-strong": "var(--border-strong)",
+          mute: "var(--fg-muted)",
+          dim: "var(--fg-dim)",
         },
         lime: {
-          accent: "#c8f035",
-          dark: "#a7cc2c",
+          accent: "var(--accent)",
+          dark: "var(--accent-hover)",
+        },
+        accent: {
+          DEFAULT: "var(--accent)",
+          hover: "var(--accent-hover)",
+          soft: "var(--accent-soft)",
+          border: "var(--accent-border)",
+        },
+        status: {
+          good: "var(--good)",
+          warn: "var(--warn)",
+          mid: "var(--mid)",
+          bad: "var(--bad)",
         },
       },
       fontFamily: {
-        sans: ['"DM Sans"', "system-ui", "sans-serif"],
-        serif: ['"DM Serif Display"', "Georgia", "serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        serif: ["Fraunces", "Georgia", "serif"],
+        mono: ['"JetBrains Mono"', "monospace"],
+      },
+      borderRadius: {
+        card: "18px",
+        pill: "999px",
+        input: "12px",
+      },
+      boxShadow: {
+        card: "var(--shadow)",
       },
     },
   },

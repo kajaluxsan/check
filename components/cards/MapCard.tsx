@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { MapIcon, TrainFront, ShoppingCart, GraduationCap, Cross, Stethoscope, Utensils, ParkingCircle } from "lucide-react";
 import Card from "@/components/ui/Card";
 import { fetchPois } from "@/lib/api/overpass";
 import type { GeoPoint, Poi, PoiCategory } from "@/lib/types";
@@ -9,24 +10,23 @@ import type { GeoPoint, Poi, PoiCategory } from "@/lib/types";
 const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => (
-    <div className="h-[360px] w-full rounded-xl bg-ink-bg border border-ink-border flex items-center justify-center text-ink-dim text-sm">
+    <div className="h-[360px] w-full rounded-input bg-ink-bg border border-ink-border flex items-center justify-center text-ink-dim text-sm">
       Lade Karte …
     </div>
   ),
 });
 
-const CATEGORIES: { value: PoiCategory; label: string; icon: string }[] = [
-  { value: "station", label: "ÖV", icon: "🚆" },
-  { value: "supermarket", label: "Laden", icon: "🛒" },
-  { value: "school", label: "Schule", icon: "🏫" },
-  { value: "pharmacy", label: "Apotheke", icon: "💊" },
-  { value: "doctor", label: "Arzt", icon: "🏥" },
-  { value: "restaurant", label: "Essen", icon: "🍽️" },
-  { value: "parking", label: "Parkplatz", icon: "🅿️" },
+const CATEGORIES: { value: PoiCategory; label: string; Icon: typeof MapIcon }[] = [
+  { value: "station", label: "ÖV", Icon: TrainFront },
+  { value: "supermarket", label: "Laden", Icon: ShoppingCart },
+  { value: "school", label: "Schule", Icon: GraduationCap },
+  { value: "pharmacy", label: "Apotheke", Icon: Cross },
+  { value: "doctor", label: "Arzt", Icon: Stethoscope },
+  { value: "restaurant", label: "Essen", Icon: Utensils },
+  { value: "parking", label: "Parkplatz", Icon: ParkingCircle },
 ];
 
 const MAX_RADIUS = 10000;
-
 const RADIUS_OPTIONS = [250, 500, 750, 1000, 5000];
 
 function formatRadius(r: number): string {
@@ -42,25 +42,16 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch once with max radius — then filter client-side by selected radius.
   useEffect(() => {
     if (!center) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
     fetchPois(center, MAX_RADIUS)
-      .then((list) => {
-        if (!cancelled) setAllPois(list);
-      })
-      .catch(() => {
-        if (!cancelled) setError("Daten momentan nicht verfügbar.");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+      .then((list) => { if (!cancelled) setAllPois(list); })
+      .catch(() => { if (!cancelled) setError("Daten momentan nicht verfügbar."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [center]);
 
   function toggle(cat: PoiCategory) {
@@ -72,20 +63,12 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
     });
   }
 
-  const filtered = allPois.filter(
-    (p) => active.has(p.category) && p.distanceM <= radius,
-  );
+  const filtered = allPois.filter((p) => active.has(p.category) && p.distanceM <= radius);
 
   return (
-    <Card
-      title="Umgebungskarte"
-      icon="🗺️"
-      className="md:col-span-2"
-    >
+    <Card title="Umgebungskarte" icon={MapIcon} className="md:col-span-2">
       {!center ? (
-        <div className="py-10 text-ink-mute text-sm">
-          Keine Koordinaten verfügbar.
-        </div>
+        <div className="py-10 text-ink-mute text-sm">Keine Koordinaten verfügbar.</div>
       ) : (
         <>
           <div className="flex flex-wrap gap-2 mb-4">
@@ -96,26 +79,27 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
                   key={c.value}
                   type="button"
                   onClick={() => toggle(c.value)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-medium border transition ${
                     on
-                      ? "bg-lime-accent text-ink-bg border-lime-accent"
-                      : "bg-ink-bg text-ink-mute border-ink-border hover:text-white"
+                      ? "bg-accent text-white border-accent"
+                      : "bg-ink-bg text-ink-mute border-ink-border hover:text-[var(--fg)]"
                   }`}
                 >
-                  {c.icon} {c.label}
+                  <c.Icon className="w-3.5 h-3.5" />
+                  {c.label}
                 </button>
               );
             })}
           </div>
 
-          <div className="h-[360px] rounded-xl overflow-hidden border border-ink-border">
+          <div className="h-[360px] rounded-input overflow-hidden border border-ink-border">
             <Map center={center} pois={filtered} radiusM={radius} />
           </div>
 
-          <div className="mt-4 rounded-xl bg-ink-bg border border-ink-border p-3">
+          <div className="mt-4 rounded-input bg-ink-bg border border-ink-border p-3">
             <div className="flex items-center justify-between mb-2.5">
-              <div className="text-xs text-ink-dim uppercase tracking-wide">Radius</div>
-              <div className="text-sm font-medium text-white">{formatRadius(radius)}</div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">Radius</div>
+              <div className="text-sm font-medium font-mono text-[var(--fg)]">{formatRadius(radius)}</div>
             </div>
             <div className="grid grid-cols-5 gap-1.5">
               {RADIUS_OPTIONS.map((r) => (
@@ -123,10 +107,10 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
                   key={r}
                   type="button"
                   onClick={() => setRadius(r)}
-                  className={`py-2 rounded-lg text-xs font-medium border transition ${
+                  className={`py-2 rounded-input text-xs font-medium border transition ${
                     radius === r
-                      ? "bg-lime-accent text-ink-bg border-lime-accent"
-                      : "bg-ink-elev text-ink-mute border-ink-border hover:text-white hover:border-ink-mute"
+                      ? "bg-accent text-white border-accent"
+                      : "bg-ink-elev text-ink-mute border-ink-border hover:text-[var(--fg)] hover:border-ink-mute"
                   }`}
                 >
                   {formatRadius(r)}
@@ -135,16 +119,10 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
             </div>
           </div>
 
-          {loading && (
-            <div className="mt-3 text-xs text-ink-dim">Aktualisiere POIs …</div>
-          )}
-          {error && (
-            <div className="mt-3 text-xs text-red-400">{error}</div>
-          )}
+          {loading && <div className="mt-3 text-xs text-ink-dim">Aktualisiere POIs …</div>}
+          {error && <div className="mt-3 text-xs text-status-bad">{error}</div>}
           {!loading && !error && (
-            <div className="mt-3 text-xs text-ink-dim">
-              {filtered.length} Einträge im {formatRadius(radius)}-Radius
-            </div>
+            <div className="mt-3 text-xs text-ink-dim">{filtered.length} Einträge im {formatRadius(radius)}-Radius</div>
           )}
         </>
       )}

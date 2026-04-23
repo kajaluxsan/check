@@ -1,8 +1,9 @@
+import { type LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 interface CardProps {
   title: string;
-  icon?: string;
+  icon?: LucideIcon;
   source?: string;
   loading?: boolean;
   error?: string | null;
@@ -13,7 +14,7 @@ interface CardProps {
 
 export default function Card({
   title,
-  icon,
+  icon: Icon,
   source,
   loading,
   error,
@@ -23,11 +24,15 @@ export default function Card({
 }: CardProps) {
   return (
     <section
-      className={`rounded-2xl bg-ink-elev border border-ink-border p-6 ${className}`}
+      className={`rounded-card bg-ink-elev border border-ink-border p-6 shadow-card ${className}`}
     >
-      <header className="flex items-start justify-between gap-4 mb-4">
-        <div className="flex items-center gap-2">
-          {icon && <span className="text-2xl">{icon}</span>}
+      <header className="flex items-start justify-between gap-4 mb-5">
+        <div className="flex items-center gap-3">
+          {Icon && (
+            <div className="w-9 h-9 rounded-input bg-accent-soft flex items-center justify-center">
+              <Icon className="w-[18px] h-[18px] text-accent" />
+            </div>
+          )}
           <h3 className="font-serif text-xl">{title}</h3>
         </div>
         {action}
@@ -36,7 +41,7 @@ export default function Card({
       {loading && (
         <div className="py-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-ink-mute text-sm">
-            <span className="inline-block w-4 h-4 border-2 border-ink-border border-t-lime-accent rounded-full animate-spin" />
+            <span className="inline-block w-4 h-4 border-2 border-ink-border border-t-accent rounded-full animate-spin" />
             Lade Daten …
           </div>
         </div>
@@ -44,7 +49,7 @@ export default function Card({
 
       {!loading && error && (
         <div className="py-6 text-sm text-ink-mute">
-          <span className="text-red-400 mr-1">⚠</span>
+          <span className="text-status-bad mr-1">⚠</span>
           {error}
         </div>
       )}
@@ -52,8 +57,10 @@ export default function Card({
       {!loading && !error && <div>{children}</div>}
 
       {source && !loading && (
-        <div className="mt-4 pt-4 border-t border-ink-border text-xs text-ink-dim">
-          Quelle: {source}
+        <div className="mt-5 pt-4 border-t border-ink-border">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">
+            Quelle: {source}
+          </span>
         </div>
       )}
     </section>
@@ -72,14 +79,14 @@ export function Metric({
   tone?: "good" | "warn" | "bad" | "neutral";
 }) {
   const colors = {
-    good: "text-lime-accent",
-    warn: "text-yellow-400",
-    bad: "text-red-400",
-    neutral: "text-white",
+    good: "text-status-good",
+    warn: "text-status-warn",
+    bad: "text-status-bad",
+    neutral: "text-[var(--fg)]",
   };
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-ink-dim">
+      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">
         {label}
       </div>
       <div className={`text-2xl font-semibold mt-1 ${colors[tone ?? "neutral"]}`}>
@@ -98,14 +105,14 @@ export function Pill({
   children: ReactNode;
 }) {
   const styles = {
-    good: "bg-lime-accent/10 text-lime-accent border-lime-accent/30",
-    warn: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-    mid: "bg-orange-500/10 text-orange-400 border-orange-500/30",
-    bad: "bg-red-500/10 text-red-400 border-red-500/30",
+    good: "bg-[color:var(--good)]/10 text-status-good border-[color:var(--good)]/30",
+    warn: "bg-[color:var(--warn)]/10 text-status-warn border-[color:var(--warn)]/30",
+    mid: "bg-[color:var(--mid)]/10 text-[var(--mid)] border-[color:var(--mid)]/30",
+    bad: "bg-[color:var(--bad)]/10 text-status-bad border-[color:var(--bad)]/30",
   };
   return (
     <span
-      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${styles[tone]}`}
+      className={`inline-flex items-center px-3 py-1 rounded-pill text-xs font-medium border ${styles[tone]}`}
     >
       {children}
     </span>

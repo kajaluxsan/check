@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Building2 } from "lucide-react";
 import Card, { Metric } from "@/components/ui/Card";
 import { fetchGwrBuilding, type GwrBuilding } from "@/lib/api/gwr";
 import type { GeoPoint } from "@/lib/types";
@@ -25,24 +26,16 @@ export default function BuildingCard({
     setLoading(true);
     setError(null);
     fetchGwrBuilding(center)
-      .then((r) => {
-        if (!cancelled) setData(r);
-      })
-      .catch(() => {
-        if (!cancelled) setError("Gebäudedaten nicht verfügbar.");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+      .then((r) => { if (!cancelled) setData(r); })
+      .catch(() => { if (!cancelled) setError("Gebäudedaten nicht verfügbar."); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [center, hasHouseNumber]);
 
   if (!hasHouseNumber) {
     return (
-      <Card title="Gebäudedaten" icon="🏠">
-        <div className="rounded-xl bg-ink-bg border border-ink-border p-4">
+      <Card title="Gebäudedaten" icon={Building2}>
+        <div className="rounded-input bg-ink-bg border border-ink-border p-4">
           <p className="text-ink-mute text-sm">
             Gib die genaue Adresse mit Hausnummer an, um weitere
             Informationen wie Baujahr, Heizungsart und Gebäudetyp anzuzeigen.
@@ -53,12 +46,7 @@ export default function BuildingCard({
   }
 
   return (
-    <Card
-      title="Gebäudedaten"
-      icon="🏠"
-      loading={loading}
-      error={error}
-    >
+    <Card title="Gebäudedaten" icon={Building2} loading={loading} error={error}>
       {data ? (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
@@ -66,63 +54,31 @@ export default function BuildingCard({
               <Metric
                 label="Baujahr"
                 value={String(data.buildingYear)}
-                tone={
-                  data.buildingYear >= 2010
-                    ? "good"
-                    : data.buildingYear >= 1990
-                      ? "neutral"
-                      : "warn"
-                }
+                tone={data.buildingYear >= 2010 ? "good" : data.buildingYear >= 1990 ? "neutral" : "warn"}
               />
             )}
-            {data.heatingType && (
-              <Metric label="Heizungstyp" value={data.heatingType} />
-            )}
+            {data.heatingType && <Metric label="Heizungstyp" value={data.heatingType} />}
             {data.heatingSource && (
               <Metric
                 label="Energieträger"
                 value={data.heatingSource}
-                tone={
-                  ["Wärmepumpe", "Sonne", "Fernwärme", "Erdwärme", "Luft", "Wasser"].some((t) =>
-                    data.heatingSource?.includes(t),
-                  )
-                    ? "good"
-                    : "neutral"
-                }
+                tone={["Wärmepumpe", "Sonne", "Fernwärme", "Erdwärme", "Luft", "Wasser"].some((t) => data.heatingSource?.includes(t)) ? "good" : "neutral"}
               />
             )}
           </div>
-
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {data.buildingCategory && (
-              <InfoRow label="Gebäudetyp" value={data.buildingCategory} />
-            )}
-            {data.floors && (
-              <InfoRow label="Stockwerke" value={String(data.floors)} />
-            )}
-            {data.dwellings && (
-              <InfoRow label="Wohnungen" value={String(data.dwellings)} />
-            )}
-            {data.area && (
-              <InfoRow label="Gebäudefläche" value={`${data.area} m²`} />
-            )}
-            {data.egid && (
-              <InfoRow label="EGID" value={data.egid} />
-            )}
+            {data.buildingCategory && <InfoRow label="Gebäudetyp" value={data.buildingCategory} />}
+            {data.floors && <InfoRow label="Stockwerke" value={String(data.floors)} />}
+            {data.dwellings && <InfoRow label="Wohnungen" value={String(data.dwellings)} />}
+            {data.area && <InfoRow label="Gebäudefläche" value={`${data.area} m²`} />}
+            {data.egid && <InfoRow label="EGID" value={data.egid} />}
           </div>
-
           {!data.buildingYear && !data.heatingType && !data.buildingCategory && (
-            <div className="text-sm text-ink-mute">
-              Für dieses Gebäude sind keine detaillierten Daten im GWR hinterlegt.
-            </div>
+            <div className="text-sm text-ink-mute">Für dieses Gebäude sind keine detaillierten Daten im GWR hinterlegt.</div>
           )}
         </>
       ) : (
-        !loading && !error && (
-          <div className="text-sm text-ink-mute">
-            Kein Gebäude an dieser Adresse im GWR gefunden.
-          </div>
-        )
+        !loading && !error && <div className="text-sm text-ink-mute">Kein Gebäude an dieser Adresse im GWR gefunden.</div>
       )}
     </Card>
   );
@@ -130,9 +86,9 @@ export default function BuildingCard({
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-ink-bg border border-ink-border px-3 py-2.5">
-      <div className="text-[10px] uppercase tracking-wide text-ink-dim">{label}</div>
-      <div className="text-sm text-white mt-0.5 truncate">{value}</div>
+    <div className="rounded-input bg-ink-bg border border-ink-border px-3 py-2.5">
+      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">{label}</div>
+      <div className="text-sm text-[var(--fg)] mt-0.5 truncate">{value}</div>
     </div>
   );
 }
