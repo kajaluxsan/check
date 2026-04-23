@@ -1,10 +1,10 @@
 import Link from "next/link";
+import NavDropdown from "./NavDropdown";
 
 const LINKS = [
   { href: "/analyse", label: "Analyse" },
   { href: "/rechner", label: "Rechner" },
   { href: "/mietrecht", label: "Mietrecht" },
-  { href: "/ueber", label: "Über uns" },
 ];
 
 export default function Nav() {
@@ -28,6 +28,7 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
+          <NavDropdown />
         </nav>
       </div>
     </header>
