@@ -64,28 +64,37 @@ export default function AnalyseView() {
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-10 py-10">
       {/* Header */}
-      <div className="mb-8">
-        <div className="text-xs uppercase tracking-[0.2em] text-lime-accent mb-2">
-          {t.analyse.yourAnalysis}
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <div className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">
+            {t.analyse.yourAnalysis}
+          </div>
+          <h1 className="font-serif text-3xl sm:text-5xl text-[var(--fg)]">
+            {address}
+          </h1>
+          {geo?.displayName && (
+            <p className="text-ink-mute text-sm mt-2 truncate max-w-lg">{geo.displayName}</p>
+          )}
         </div>
-        <h1 className="font-serif text-3xl sm:text-5xl text-white">
-          {address}
-        </h1>
-        {geo?.displayName && (
-          <p className="text-ink-mute text-sm mt-2 truncate">{geo.displayName}</p>
+        {geo && (
+          <div className="flex flex-wrap gap-2">
+            <Chip>{rooms} Zi.</Chip>
+            <Chip>{new Intl.NumberFormat("de-CH").format(rent)} CHF</Chip>
+            {geo.canton && <Chip>{geo.canton}</Chip>}
+          </div>
         )}
       </div>
 
       {loading && (
         <div className="py-20 text-center text-ink-mute">
-          <div className="inline-block w-6 h-6 border-2 border-ink-border border-t-lime-accent rounded-full animate-spin mb-3" />
+          <div className="inline-block w-6 h-6 border-2 border-ink-border border-t-accent rounded-full animate-spin mb-3" />
           <div className="text-sm">{t.analyse.searching}</div>
         </div>
       )}
 
       {!loading && error && (
-        <div className="rounded-2xl bg-ink-elev border border-red-500/30 p-6 text-center">
-          <div className="text-red-400 font-medium mb-2">{error}</div>
+        <div className="rounded-card bg-ink-elev border border-status-bad/30 p-6 text-center">
+          <div className="text-status-bad font-medium mb-2">{error}</div>
           <div className="text-ink-mute text-sm mb-4">{t.analyse.tryAgain}</div>
           <div className="max-w-xl mx-auto">
             <AddressSearch variant="compact" />
@@ -95,15 +104,8 @@ export default function AnalyseView() {
 
       {!loading && !error && geo && (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-          <RentCheckCard
-            canton={geo.canton ?? null}
-            rooms={rooms}
-            actual={rent}
-          />
-          <BuildingCard
-            center={{ lat: geo.lat, lon: geo.lon }}
-            hasHouseNumber={!!geo.houseNumber}
-          />
+          <RentCheckCard canton={geo.canton ?? null} rooms={rooms} actual={rent} />
+          <BuildingCard center={{ lat: geo.lat, lon: geo.lon }} hasHouseNumber={!!geo.houseNumber} />
           <MapCard center={{ lat: geo.lat, lon: geo.lon }} />
           <NoiseCard center={{ lat: geo.lat, lon: geo.lon }} />
           <TransportCard center={{ lat: geo.lat, lon: geo.lon }} />
@@ -112,5 +114,13 @@ export default function AnalyseView() {
         </div>
       )}
     </div>
+  );
+}
+
+function Chip({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center px-3 py-1.5 rounded-pill bg-ink-elev border border-ink-border font-mono text-xs text-ink-mute">
+      {children}
+    </span>
   );
 }
