@@ -1,10 +1,111 @@
 "use client";
 
 import { useState } from "react";
-import { useT } from "@/lib/i18n/context";
+import { Mail, Send, Loader2 } from "lucide-react";
+
+type Lang = "de" | "fr" | "it" | "en";
+
+const T: Record<Lang, {
+  title: string;
+  subtitle: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  message: string;
+  send: string;
+  sent: string;
+  sentSub: string;
+  another: string;
+  required: string;
+  emailInvalid: string;
+  placeholderFirst: string;
+  placeholderLast: string;
+  placeholderEmail: string;
+  placeholderMessage: string;
+}> = {
+  de: {
+    title: "Kontakt",
+    subtitle: "Hast du Fragen, Feedback oder möchtest zusammenarbeiten? Schreib uns.",
+    firstName: "Vorname",
+    lastName: "Nachname",
+    email: "E-Mail",
+    message: "Nachricht",
+    send: "Nachricht senden",
+    sent: "Nachricht gesendet",
+    sentSub: "Wir melden uns so schnell wie möglich bei dir.",
+    another: "Weitere Nachricht senden",
+    required: "Bitte fülle alle Felder aus.",
+    emailInvalid: "Bitte gib eine gültige E-Mail ein.",
+    placeholderFirst: "Max",
+    placeholderLast: "Muster",
+    placeholderEmail: "max@beispiel.ch",
+    placeholderMessage: "Deine Nachricht …",
+  },
+  fr: {
+    title: "Contact",
+    subtitle: "Tu as des questions, un retour ou tu souhaites collaborer? Écris-nous.",
+    firstName: "Prénom",
+    lastName: "Nom",
+    email: "E-mail",
+    message: "Message",
+    send: "Envoyer le message",
+    sent: "Message envoyé",
+    sentSub: "Nous te répondrons dès que possible.",
+    another: "Envoyer un autre message",
+    required: "Veuillez remplir tous les champs.",
+    emailInvalid: "Veuillez entrer un e-mail valide.",
+    placeholderFirst: "Jean",
+    placeholderLast: "Dupont",
+    placeholderEmail: "jean@exemple.ch",
+    placeholderMessage: "Ton message …",
+  },
+  it: {
+    title: "Contatto",
+    subtitle: "Hai domande, feedback o vuoi collaborare? Scrivici.",
+    firstName: "Nome",
+    lastName: "Cognome",
+    email: "E-mail",
+    message: "Messaggio",
+    send: "Invia il messaggio",
+    sent: "Messaggio inviato",
+    sentSub: "Ti risponderemo il prima possibile.",
+    another: "Invia un altro messaggio",
+    required: "Si prega di compilare tutti i campi.",
+    emailInvalid: "Si prega di inserire un'e-mail valida.",
+    placeholderFirst: "Marco",
+    placeholderLast: "Rossi",
+    placeholderEmail: "marco@esempio.ch",
+    placeholderMessage: "Il tuo messaggio …",
+  },
+  en: {
+    title: "Contact",
+    subtitle: "Have questions, feedback or want to collaborate? Write to us.",
+    firstName: "First name",
+    lastName: "Last name",
+    email: "Email",
+    message: "Message",
+    send: "Send message",
+    sent: "Message sent",
+    sentSub: "We'll get back to you as soon as possible.",
+    another: "Send another message",
+    required: "Please fill in all fields.",
+    emailInvalid: "Please enter a valid email.",
+    placeholderFirst: "John",
+    placeholderLast: "Doe",
+    placeholderEmail: "john@example.com",
+    placeholderMessage: "Your message …",
+  },
+};
+
+const LANG_LABELS: Record<Lang, string> = {
+  de: "DE",
+  fr: "FR",
+  it: "IT",
+  en: "EN",
+};
 
 export default function KontaktPage() {
-  const { t } = useT();
+  const [lang, setLang] = useState<Lang>("de");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,16 +114,18 @@ export default function KontaktPage() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
 
+  const t = T[lang];
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
     if (!firstName.trim() || !lastName.trim() || !email.trim() || !message.trim()) {
-      setError(t.contact.required);
+      setError(t.required);
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError(t.contact.emailInvalid);
+      setError(t.emailInvalid);
       return;
     }
 
@@ -34,12 +137,13 @@ export default function KontaktPage() {
         body: JSON.stringify({ firstName, lastName, email, message }),
       });
       if (!res.ok) {
-        setError(t.contact.sendError);
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? t.required);
         return;
       }
       setSent(true);
     } catch {
-      setError(t.contact.sendError);
+      setError(t.required);
     } finally {
       setSending(false);
     }
@@ -47,12 +151,12 @@ export default function KontaktPage() {
 
   if (sent) {
     return (
-      <div className="w-full max-w-xl mx-auto px-4 sm:px-6 lg:px-10 py-20 text-center">
-        <div className="inline-flex w-16 h-16 rounded-full bg-lime-accent/15 text-lime-accent items-center justify-center text-3xl mb-4">
-          ✓
+      <div className="max-w-xl mx-auto px-4 py-20 text-center">
+        <div className="inline-flex w-16 h-16 rounded-full bg-accent-soft text-accent items-center justify-center mb-4">
+          <Send className="w-7 h-7" />
         </div>
-        <h1 className="font-serif text-3xl">{t.contact.sent}</h1>
-        <p className="text-ink-mute mt-3">{t.contact.sentSub}</p>
+        <h1 className="font-serif text-3xl">{t.sent}</h1>
+        <p className="text-ink-mute mt-3">{t.sentSub}</p>
         <button
           onClick={() => {
             setSent(false);
@@ -61,76 +165,100 @@ export default function KontaktPage() {
             setEmail("");
             setMessage("");
           }}
-          className="mt-6 inline-flex items-center px-5 py-2.5 rounded-lg bg-ink-elev border border-ink-border text-ink-mute font-medium hover:text-white transition"
+          className="mt-6 inline-flex items-center px-5 py-2.5 rounded-input bg-ink-elev border border-ink-border text-ink-mute font-medium hover:text-[var(--fg)] transition"
         >
-          {t.contact.another}
+          {t.another}
         </button>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-10 py-12">
+    <div className="max-w-2xl mx-auto px-4 py-12">
+      {/* Language switcher */}
+      <div className="flex justify-end mb-6">
+        <div className="inline-flex rounded-input border border-ink-border overflow-hidden">
+          {(Object.keys(LANG_LABELS) as Lang[]).map((l) => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setLang(l)}
+              className={`px-3 py-1.5 text-xs font-mono font-medium transition ${
+                lang === l
+                  ? "bg-accent text-white"
+                  : "bg-ink-elev text-ink-mute hover:text-[var(--fg)]"
+              }`}
+            >
+              {LANG_LABELS[l]}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="mb-8">
-        <h1 className="font-serif text-4xl sm:text-5xl">{t.contact.title}</h1>
-        <p className="text-ink-mute mt-3 text-lg">{t.contact.subtitle}</p>
+        <div className="w-10 h-10 rounded-input bg-accent-soft flex items-center justify-center mb-4">
+          <Mail className="w-5 h-5 text-accent" />
+        </div>
+        <h1 className="font-serif text-4xl sm:text-5xl">{t.title}</h1>
+        <p className="text-ink-mute mt-3 text-lg">{t.subtitle}</p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl bg-ink-elev border border-ink-border p-6 sm:p-8 space-y-5"
+        className="rounded-card bg-ink-elev border border-ink-border p-6 sm:p-8 shadow-card space-y-5"
       >
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field label={t.contact.firstName}>
+          <Field label={t.firstName}>
             <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder={t.contact.placeholderFirst}
+              placeholder={t.placeholderFirst}
               className="input"
             />
           </Field>
-          <Field label={t.contact.lastName}>
+          <Field label={t.lastName}>
             <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder={t.contact.placeholderLast}
+              placeholder={t.placeholderLast}
               className="input"
             />
           </Field>
         </div>
 
-        <Field label={t.contact.email}>
+        <Field label={t.email}>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={t.contact.placeholderEmail}
+            placeholder={t.placeholderEmail}
             className="input"
           />
         </Field>
 
-        <Field label={t.contact.message}>
+        <Field label={t.message}>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder={t.contact.placeholderMessage}
+            placeholder={t.placeholderMessage}
             rows={5}
             className="input resize-none"
           />
         </Field>
 
         {error && (
-          <div className="text-sm text-red-400">{error}</div>
+          <div className="text-sm text-status-bad">{error}</div>
         )}
 
         <button
           type="submit"
           disabled={sending}
-          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-lime-accent text-ink-bg font-semibold hover:bg-lime-dark disabled:opacity-60 disabled:cursor-not-allowed transition"
+          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-input bg-accent text-white font-semibold hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
-          {sending ? t.contact.sending : t.contact.send}
+          {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          {sending ? "…" : t.send}
         </button>
       </form>
 
@@ -160,7 +288,7 @@ export default function KontaktPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <div className="text-xs uppercase tracking-wide text-ink-dim mb-1.5">
+      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim mb-1.5">
         {label}
       </div>
       {children}

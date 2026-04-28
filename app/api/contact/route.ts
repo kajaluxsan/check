@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   const resend = new Resend(apiKey);
 
   const { error } = await resend.emails.send({
-    from: "checkmiete.ch <onboarding@resend.dev>",
+    from: "checkmiete.ch <noreply@checkmiete.ch>",
     to: CONTACT_EMAIL,
     replyTo: email,
     subject: `Kontakt: ${firstName} ${lastName}`,
