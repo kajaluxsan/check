@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useT } from "@/lib/i18n/context";
 import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";
+import NavDropdown from "./NavDropdown";
 
 export default function Nav() {
   const { t } = useT();
@@ -12,7 +13,6 @@ export default function Nav() {
     { href: "/analyse", label: t.nav.analyse },
     { href: "/rechner", label: t.nav.rechner },
     { href: "/mietrecht", label: t.nav.mietrecht },
-    { href: "/ueber", label: t.nav.about },
   ];
 
   return (
@@ -36,6 +36,7 @@ export default function Nav() {
                 {l.label}
               </Link>
             ))}
+            <NavDropdown />
           </nav>
           <LanguageToggle />
           <ThemeToggle />

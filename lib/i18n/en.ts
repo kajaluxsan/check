@@ -21,6 +21,8 @@ const en: Translations = {
     rechner: "Calculators",
     mietrecht: "Tenancy law",
     about: "About",
+    more: "More",
+    contact: "Contact",
   },
 
   theme: {
@@ -298,6 +300,27 @@ const en: Translations = {
     title: "Tenancy law guide coming soon",
     text: "We\u2019re working on well-prepared answers to the most common questions: challenging initial rent, reporting defects, reclaiming deposit, filing termination correctly and more.",
     hint: "In the meantime, you\u2019ll find the key quick tips directly in the address analysis.",
+  },
+
+  contact: {
+    title: "Contact",
+    subtitle: "Have questions, feedback or want to collaborate? Write to us.",
+    firstName: "First name",
+    lastName: "Last name",
+    email: "Email",
+    message: "Message",
+    send: "Send message",
+    sending: "Sending \u2026",
+    sent: "Message sent",
+    sentSub: "We\u2019ll get back to you as soon as possible.",
+    another: "Send another message",
+    required: "Please fill in all fields.",
+    emailInvalid: "Please enter a valid email.",
+    sendError: "Email could not be sent. Please try again later.",
+    placeholderFirst: "John",
+    placeholderLast: "Doe",
+    placeholderEmail: "john@example.com",
+    placeholderMessage: "Your message \u2026",
   },
 } as const;
 
