@@ -1,5 +1,7 @@
 import type {
   GeoPoint,
+  JourneyResult,
+  JourneySection,
   TransportDeparture,
   TransportStop,
 } from "../types";
@@ -70,6 +72,14 @@ export async function fetchJourneyTime(
   fromName: string,
   toQuery: string,
 ): Promise<number | null> {
+  const journey = await fetchJourney(fromName, toQuery);
+  return journey?.durationMin ?? null;
+}
+
+export async function fetchJourney(
+  fromName: string,
+  toQuery: string,
+): Promise<JourneyResult | null> {
   const params = new URLSearchParams({
     from: fromName,
     to: toQuery,
@@ -82,10 +92,45 @@ export async function fetchJourneyTime(
   const data = (await res.json()) as { connections: RawConnection[] };
   const c = data.connections?.[0];
   if (!c?.duration) return null;
-  // Duration format: "00d00:45:00"
+
   const m = /(\d+)d(\d{2}):(\d{2}):/.exec(c.duration);
   if (!m) return null;
-  return parseInt(m[1]) * 1440 + parseInt(m[2]) * 60 + parseInt(m[3]);
+  const durationMin = parseInt(m[1]) * 1440 + parseInt(m[2]) * 60 + parseInt(m[3]);
+
+  const sections: JourneySection[] = (c.sections ?? [])
+    .map((s): JourneySection | null => {
+      const depTime = fmtTime(s.departure?.departure);
+      const arrTime = fmtTime(s.arrival?.arrival);
+      if (!depTime || !arrTime) return null;
+
+      const isWalk = s.walk != null;
+      return {
+        departureName: s.departure?.station?.name ?? "—",
+        departureTime: depTime,
+        arrivalName: s.arrival?.station?.name ?? "—",
+        arrivalTime: arrTime,
+        category: isWalk ? "walk" : (s.journey?.category ?? ""),
+        line: isWalk ? "" : `${s.journey?.category ?? ""} ${s.journey?.number ?? ""}`.trim(),
+        direction: s.journey?.to ?? "",
+        isWalk,
+      };
+    })
+    .filter((s): s is JourneySection => s !== null);
+
+  return {
+    durationMin,
+    departure: fmtTime(c.from?.departure) ?? "—",
+    arrival: fmtTime(c.to?.arrival) ?? "—",
+    transfers: c.transfers ?? 0,
+    sections,
+  };
+}
+
+function fmtTime(iso: string | undefined | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return d.toLocaleTimeString("de-CH", { hour: "2-digit", minute: "2-digit" });
 }
 
 interface RawStation {
@@ -104,4 +149,15 @@ interface RawStationboard {
 
 interface RawConnection {
   duration?: string;
+  transfers?: number;
+  from?: { departure?: string; station?: { name?: string } };
+  to?: { arrival?: string; station?: { name?: string } };
+  sections?: RawSection[];
+}
+
+interface RawSection {
+  departure?: { departure?: string; station?: { name?: string } };
+  arrival?: { arrival?: string; station?: { name?: string } };
+  journey?: { category?: string; number?: string; to?: string };
+  walk?: unknown;
 }

@@ -1,60 +1,91 @@
 "use client";
 
 import Link from "next/link";
-import { Scale } from "lucide-react";
-import Card from "@/components/ui/Card";
-import { DEFAULT_NOTICE_MONTHS, MAX_DEPOSIT_MONTHS, MAX_INITIAL_INCREASE_PCT, REFERENCE_RATE } from "@/lib/data/laws";
+import Card, { Pill } from "@/components/ui/Card";
+import { useT } from "@/lib/i18n/context";
+import {
+  DEFAULT_NOTICE_MONTHS,
+  MAX_DEPOSIT_MONTHS,
+  MAX_INITIAL_INCREASE_PCT,
+  REFERENCE_RATE,
+} from "@/lib/data/laws";
 
-export default function LegalCard({ rent, rooms }: { rent: number; rooms: string }) {
+export default function LegalCard({
+  rent,
+  rooms,
+}: {
+  rent: number;
+  rooms: string;
+}) {
+  const { t } = useT();
   const maxDeposit = rent * MAX_DEPOSIT_MONTHS;
 
   return (
-    <Card title="Rechtliche Schnellinfos" icon={Scale} className="md:col-span-2">
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <Card
+      title={t.legal.title}
+      icon="⚖️"
+      className="md:col-span-2 xl:col-span-3"
+    >
+      <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <LegalItem
-          title="Anfangsmiete"
-          answer={`Max. +${MAX_INITIAL_INCREASE_PCT}%`}
-          detail="Über der Vormiete. Innert 30 Tagen anfechtbar (Art. 270 OR)."
+          title={t.legal.initialRent}
+          answer={t.legal.initialRentAnswer(MAX_INITIAL_INCREASE_PCT)}
+          detail={t.legal.initialRentDetail}
         />
         <LegalItem
-          title="Max. Kaution"
-          answer={`${fmt(maxDeposit)}`}
-          detail={`${MAX_DEPOSIT_MONTHS} Nettomieten auf Sperrkonto (Art. 257e OR).`}
+          title={t.legal.maxDeposit}
+          answer={t.legal.maxDepositAnswer(fmt(maxDeposit), MAX_DEPOSIT_MONTHS)}
+          detail={t.legal.maxDepositDetail}
         />
         <LegalItem
-          title="Kündigungsfrist"
-          answer={`${DEFAULT_NOTICE_MONTHS} Monate`}
-          detail="Auf gesetzliche Termine (meist Ende März, Juni, September)."
+          title={t.legal.noticePeriod}
+          answer={t.legal.noticePeriodAnswer(DEFAULT_NOTICE_MONTHS)}
+          detail={t.legal.noticePeriodDetail}
         />
         <LegalItem
-          title="Referenzzinssatz"
-          answer={`${REFERENCE_RATE}%`}
-          detail="War der Satz bei Vertragsabschluss höher? Du hast Anspruch auf Senkung."
-          action={
-            <Link href="/rechner" className="inline-flex items-center text-xs text-accent hover:underline mt-2">
-              Rechner →
-            </Link>
-          }
+          title={t.legal.referenceRate}
+          answer={t.legal.referenceRateAnswer(REFERENCE_RATE)}
+          detail={t.legal.referenceRateDetail}
+          pill={<Link href="/rechner"><Pill tone="good">{t.legal.reductionPossible}</Pill></Link>}
         />
       </div>
-      <div className="mt-1 font-mono text-[10px] text-ink-dim">
-        Zimmer: {rooms} · Netto: {fmt(rent)}
+      <div className="mt-5 text-xs text-ink-dim">
+        {t.legal.disclaimer}
+      </div>
+      <div className="mt-1 text-xs text-ink-dim">
+        {t.legal.roomsRef(rooms, fmt(rent))}
       </div>
     </Card>
   );
 }
 
-function LegalItem({ title, answer, detail, action }: { title: string; answer: string; detail: string; action?: React.ReactNode }) {
+function LegalItem({
+  title,
+  answer,
+  detail,
+  pill,
+}: {
+  title: string;
+  answer: string;
+  detail: string;
+  pill?: React.ReactNode;
+}) {
   return (
-    <div className="rounded-input bg-ink-bg border border-ink-border p-4">
-      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim mb-2">{title}</div>
-      <div className="font-serif text-xl text-[var(--fg)]">{answer}</div>
+    <div className="rounded-xl bg-ink-bg border border-ink-border p-4">
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="text-sm uppercase tracking-wide text-ink-dim">
+          {title}
+        </div>
+        {pill}
+      </div>
+      <div className="text-white font-medium">{answer}</div>
       <div className="text-xs text-ink-mute mt-2 leading-relaxed">{detail}</div>
-      {action}
     </div>
   );
 }
 
 function fmt(v: number): string {
-  return `${new Intl.NumberFormat("de-CH", { maximumFractionDigits: 0 }).format(Math.round(v))} CHF`;
+  return `${new Intl.NumberFormat("de-CH", { maximumFractionDigits: 0 }).format(
+    Math.round(v),
+  )} CHF`;
 }

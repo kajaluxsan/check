@@ -28,7 +28,18 @@ export type PoiCategory =
   | "pharmacy"
   | "doctor"
   | "restaurant"
-  | "station";
+  | "station"
+  | "bank"
+  | "fuel"
+  | "post"
+  | "sport"
+  | "park"
+  | "library"
+  | "kiosk"
+  | "kindergarten"
+  | "bus_tram"
+  | "worship"
+  | "culture";
 
 export interface Poi extends GeoPoint {
   id: string;
@@ -48,6 +59,25 @@ export interface TransportDeparture {
   destination: string;
   category: string;
   number: string;
+}
+
+export interface JourneySection {
+  departureName: string;
+  departureTime: string; // HH:MM
+  arrivalName: string;
+  arrivalTime: string; // HH:MM
+  category: string; // e.g. "S", "IR", "Bus", or "walk"
+  line: string; // e.g. "S41"
+  direction: string;
+  isWalk: boolean;
+}
+
+export interface JourneyResult {
+  durationMin: number;
+  departure: string; // HH:MM
+  arrival: string; // HH:MM
+  transfers: number;
+  sections: JourneySection[];
 }
 
 export interface TaxInfo {

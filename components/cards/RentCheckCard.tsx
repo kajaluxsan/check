@@ -1,8 +1,8 @@
 "use client";
 
-import { Coins } from "lucide-react";
 import Card, { Metric, Pill } from "@/components/ui/Card";
 import { checkRent, type RentCheckResult } from "@/lib/calc/rent";
+import { useT } from "@/lib/i18n/context";
 import type { CantonCode, Verdict } from "@/lib/types";
 
 const VERDICT_TONE: Record<Verdict, "good" | "warn" | "mid" | "bad"> = {
@@ -21,28 +21,43 @@ export default function RentCheckCard({
   rooms: string;
   actual: number;
 }) {
+  const { t } = useT();
+
   if (!canton) {
-    return <Card title="Mietpreis-Check" icon={Coins} error="Kanton nicht ermittelbar." />;
+    return (
+      <Card title={t.rent.title} icon="💰" error={t.common.cantonNotFound} />
+    );
   }
   const result = checkRent(canton, rooms, actual);
   if (!result) {
-    return <Card title="Mietpreis-Check" icon={Coins} error="Keine Daten für diese Zimmerzahl." />;
+    return (
+      <Card
+        title={t.rent.title}
+        icon="💰"
+        error={t.rent.noData}
+      />
+    );
   }
 
   const tone = VERDICT_TONE[result.verdict];
-  const metricTone = result.verdict === "great" || result.verdict === "fair" ? "good" : result.verdict === "slightly" ? "warn" : "bad";
+  const metricTone =
+    result.verdict === "great" || result.verdict === "fair"
+      ? "good"
+      : result.verdict === "slightly"
+        ? "warn"
+        : "bad";
 
   return (
     <Card
-      title="Mietpreis-Check"
-      icon={Coins}
+      title={t.rent.title}
+      icon="💰"
       action={<Pill tone={tone}>{result.label}</Pill>}
     >
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <Metric label="Deine Miete" value={fmt(result.actual)} />
-        <Metric label="Kantons-Median" value={fmt(result.expected)} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+        <Metric label={t.rent.yourRent} value={fmt(result.actual)} />
+        <Metric label={t.rent.median} value={fmt(result.expected)} />
         <Metric
-          label={result.diff >= 0 ? "Mehr" : "Weniger"}
+          label={result.diff >= 0 ? t.rent.more : t.rent.less}
           value={`${result.diff >= 0 ? "+" : ""}${Math.round(result.diffPct * 100)}%`}
           tone={metricTone}
         />
@@ -54,6 +69,7 @@ export default function RentCheckCard({
 }
 
 function PriceBar({ result }: { result: RentCheckResult }) {
+  const { t } = useT();
   const scaleMin = result.expectedLow * 0.7;
   const scaleMax = result.expectedHigh * 1.4;
   const pct = (v: number) =>
@@ -62,9 +78,9 @@ function PriceBar({ result }: { result: RentCheckResult }) {
   return (
     <div className="mt-6">
       <div className="relative h-10">
-        <div className="absolute inset-x-0 top-4 h-2 rounded-full bg-gradient-to-r from-status-good via-status-warn via-60% to-status-bad" />
+        <div className="absolute inset-x-0 top-4 h-2 rounded-full bg-gradient-to-r from-lime-accent via-yellow-400 via-60% to-red-500" />
         <div
-          className="absolute top-3 h-4 rounded-[6px] border border-[var(--fg)]/20 bg-[var(--fg)]/10"
+          className="absolute top-3 h-4 rounded-md border border-white/30 bg-white/10"
           style={{
             left: `${pct(result.expectedLow)}%`,
             width: `${pct(result.expectedHigh) - pct(result.expectedLow)}%`,
@@ -74,13 +90,13 @@ function PriceBar({ result }: { result: RentCheckResult }) {
           className="absolute top-0 -translate-x-1/2 flex flex-col items-center"
           style={{ left: `${pct(result.actual)}%` }}
         >
-          <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--fg)] font-medium">Du</div>
-          <div className="w-3 h-3 rounded-full bg-[var(--fg)] border-2 border-ink-bg mt-1" />
+          <div className="text-[10px] text-white font-semibold">{t.rent.you}</div>
+          <div className="w-3 h-3 rounded-full bg-white border-2 border-ink-bg mt-1" />
         </div>
       </div>
-      <div className="mt-2 flex justify-between font-mono text-[10px] text-ink-dim">
+      <div className="mt-2 flex justify-between text-[10px] text-ink-dim">
         <span>{fmt(scaleMin)}</span>
-        <span>fair: {fmt(result.expectedLow)}–{fmt(result.expectedHigh)}</span>
+        <span>{t.rent.fair}: {fmt(result.expectedLow)}–{fmt(result.expectedHigh)}</span>
         <span>{fmt(scaleMax)}</span>
       </div>
     </div>
@@ -88,5 +104,7 @@ function PriceBar({ result }: { result: RentCheckResult }) {
 }
 
 function fmt(v: number): string {
-  return `${new Intl.NumberFormat("de-CH", { maximumFractionDigits: 0 }).format(Math.round(v))} CHF`;
+  return `${new Intl.NumberFormat("de-CH", { maximumFractionDigits: 0 }).format(
+    Math.round(v),
+  )} CHF`;
 }

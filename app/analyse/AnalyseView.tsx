@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useT } from "@/lib/i18n/context";
 import AddressSearch from "@/components/AddressSearch";
 import BuildingCard from "@/components/cards/BuildingCard";
 import LegalCard from "@/components/cards/LegalCard";
@@ -14,6 +15,7 @@ import { geocodeAddress } from "@/lib/api/nominatim";
 import type { NominatimResult } from "@/lib/types";
 
 export default function AnalyseView() {
+  const { t } = useT();
   const params = useSearchParams();
   const address = params.get("address") ?? "";
   const rooms = params.get("rooms") ?? "3.5";
@@ -34,11 +36,11 @@ export default function AnalyseView() {
     geocodeAddress(address)
       .then((r) => {
         if (cancelled) return;
-        if (!r) setError("Adresse nicht gefunden. Bitte präziser eingeben.");
+        if (!r) setError(t.analyse.notFound);
         setGeo(r);
       })
       .catch(() => {
-        if (!cancelled) setError("Geocoding-Dienst nicht erreichbar.");
+        if (!cancelled) setError(t.analyse.geocodeError);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -46,27 +48,26 @@ export default function AnalyseView() {
     return () => {
       cancelled = true;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   if (!address) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16">
-        <h1 className="font-serif text-4xl mb-2">Adress-Analyse</h1>
-        <p className="text-ink-mute mb-8">
-          Gib eine Adresse, deine Zimmerzahl und die Nettomiete ein.
-        </p>
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-10 py-16">
+        <h1 className="font-serif text-4xl mb-2">{t.analyse.title}</h1>
+        <p className="text-ink-mute mb-8">{t.analyse.subtitle}</p>
         <AddressSearch />
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="w-full mx-auto px-4 sm:px-6 lg:px-10 py-10">
       {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <div className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">
-            Deine Analyse
+            {t.analyse.yourAnalysis}
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl text-[var(--fg)]">
             {address}
@@ -87,16 +88,14 @@ export default function AnalyseView() {
       {loading && (
         <div className="py-20 text-center text-ink-mute">
           <div className="inline-block w-6 h-6 border-2 border-ink-border border-t-accent rounded-full animate-spin mb-3" />
-          <div className="text-sm">Suche Adresse …</div>
+          <div className="text-sm">{t.analyse.searching}</div>
         </div>
       )}
 
       {!loading && error && (
         <div className="rounded-card bg-ink-elev border border-status-bad/30 p-6 text-center">
           <div className="text-status-bad font-medium mb-2">{error}</div>
-          <div className="text-ink-mute text-sm mb-4">
-            Probiere eine präzisere Adresse mit Ort und PLZ.
-          </div>
+          <div className="text-ink-mute text-sm mb-4">{t.analyse.tryAgain}</div>
           <div className="max-w-xl mx-auto">
             <AddressSearch variant="compact" />
           </div>
@@ -104,7 +103,7 @@ export default function AnalyseView() {
       )}
 
       {!loading && !error && geo && (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           <RentCheckCard canton={geo.canton ?? null} rooms={rooms} actual={rent} />
           <BuildingCard center={{ lat: geo.lat, lon: geo.lon }} hasHouseNumber={!!geo.houseNumber} />
           <MapCard center={{ lat: geo.lat, lon: geo.lon }} />

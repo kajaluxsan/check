@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useT } from "@/lib/i18n/context";
 
 const ROOM_OPTIONS = ["1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5", "5.5", "6"];
 
@@ -10,6 +11,7 @@ export default function AddressSearch({
 }: {
   variant?: "hero" | "compact";
 }) {
+  const { t } = useT();
   const router = useRouter();
   const [address, setAddress] = useState("");
   const [rooms, setRooms] = useState("3.5");
@@ -20,12 +22,12 @@ export default function AddressSearch({
     e.preventDefault();
     setError(null);
     if (address.trim().length < 4) {
-      setError("Bitte gib eine gültige Adresse ein.");
+      setError(t.search.errorAddress);
       return;
     }
     const rentNum = Number(rent);
     if (!rentNum || rentNum < 100) {
-      setError("Bitte gib deine Nettomiete ein.");
+      setError(t.search.errorRent);
       return;
     }
     const params = new URLSearchParams({
@@ -54,8 +56,8 @@ export default function AddressSearch({
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder=""
-            className="w-full pl-20 pr-3 py-3.5 rounded-input bg-ink-bg border border-ink-border text-[var(--fg)] placeholder:text-ink-dim outline-none focus:border-accent transition"
+            placeholder={t.search.addressPlaceholder}
+            className="w-full pl-9 pr-3 py-3 rounded-xl bg-ink-bg border border-ink-border text-white placeholder:text-ink-dim outline-none focus:border-lime-accent transition"
           />
         </div>
         <select
@@ -65,7 +67,7 @@ export default function AddressSearch({
         >
           {ROOM_OPTIONS.map((r) => (
             <option key={r} value={r}>
-              {r} Zi.
+              {r} {t.search.rooms}
             </option>
           ))}
         </select>
@@ -76,18 +78,18 @@ export default function AddressSearch({
             min={100}
             value={rent}
             onChange={(e) => setRent(e.target.value)}
-            placeholder="Nettomiete"
+            placeholder={t.search.rentPlaceholder}
             className="w-full py-3.5 pl-3 pr-14 rounded-input bg-ink-bg border border-ink-border text-[var(--fg)] placeholder:text-ink-dim outline-none focus:border-accent font-mono"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-dim text-sm font-mono">
-            CHF
+            {t.common.chf}
           </span>
         </div>
         <button
           type="submit"
           className="py-3.5 px-5 rounded-input bg-accent text-white font-semibold hover:bg-accent-hover transition whitespace-nowrap"
         >
-          Analysieren →
+          {t.search.submit}
         </button>
       </div>
       {error && (
