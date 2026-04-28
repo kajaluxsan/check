@@ -21,6 +21,8 @@ const it: Translations = {
     rechner: "Calcolatori",
     mietrecht: "Diritto locativo",
     about: "Chi siamo",
+    more: "Altro",
+    contact: "Contatto",
   },
 
   theme: {
@@ -298,6 +300,27 @@ const it: Translations = {
     title: "Guida al diritto locativo in arrivo",
     text: "Stiamo preparando risposte ben strutturate alle domande pi\u00f9 frequenti: contestare l\u2019affitto iniziale, segnalare difetti, recuperare la cauzione, presentare correttamente la disdetta e altro.",
     hint: "Nel frattempo trovi le informazioni rapide pi\u00f9 importanti direttamente nell\u2019analisi dell\u2019indirizzo.",
+  },
+
+  contact: {
+    title: "Contatto",
+    subtitle: "Hai domande, feedback o vuoi collaborare? Scrivici.",
+    firstName: "Nome",
+    lastName: "Cognome",
+    email: "E-mail",
+    message: "Messaggio",
+    send: "Invia il messaggio",
+    sending: "Invio in corso \u2026",
+    sent: "Messaggio inviato",
+    sentSub: "Ti risponderemo il prima possibile.",
+    another: "Invia un altro messaggio",
+    required: "Si prega di compilare tutti i campi.",
+    emailInvalid: "Inserisci un\u2019e-mail valida.",
+    sendError: "Impossibile inviare l\u2019e-mail. Riprova pi\u00f9 tardi.",
+    placeholderFirst: "Marco",
+    placeholderLast: "Rossi",
+    placeholderEmail: "marco@esempio.ch",
+    placeholderMessage: "Il tuo messaggio \u2026",
   },
 } as const;
 

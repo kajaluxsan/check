@@ -21,6 +21,8 @@ const de = {
     rechner: "Rechner",
     mietrecht: "Mietrecht",
     about: "\u00dcber uns",
+    more: "Mehr",
+    contact: "Kontakt",
   },
 
   // Theme
@@ -313,6 +315,28 @@ const de = {
     title: "Mietrecht-Ratgeber kommt bald",
     text: "Wir arbeiten an gut aufbereiteten Antworten zu den h\u00e4ufigsten Fragen: Anfangsmiete anfechten, M\u00e4ngel melden, Kaution zur\u00fcckfordern, K\u00fcndigung korrekt einreichen und mehr.",
     hint: "Bis dahin findest du die wichtigsten Schnell-Infos direkt in der Adress-Analyse.",
+  },
+
+  // Contact page
+  contact: {
+    title: "Kontakt",
+    subtitle: "Hast du Fragen, Feedback oder m\u00f6chtest zusammenarbeiten? Schreib uns.",
+    firstName: "Vorname",
+    lastName: "Nachname",
+    email: "E-Mail",
+    message: "Nachricht",
+    send: "Nachricht senden",
+    sending: "Wird gesendet \u2026",
+    sent: "Nachricht gesendet",
+    sentSub: "Wir melden uns so schnell wie m\u00f6glich bei dir.",
+    another: "Weitere Nachricht senden",
+    required: "Bitte f\u00fclle alle Felder aus.",
+    emailInvalid: "Bitte gib eine g\u00fcltige E-Mail ein.",
+    sendError: "E-Mail konnte nicht gesendet werden. Bitte sp\u00e4ter erneut versuchen.",
+    placeholderFirst: "Max",
+    placeholderLast: "Muster",
+    placeholderEmail: "max@beispiel.ch",
+    placeholderMessage: "Deine Nachricht \u2026",
   },
 };
 

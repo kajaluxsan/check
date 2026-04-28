@@ -21,6 +21,8 @@ const fr: Translations = {
     rechner: "Calculateurs",
     mietrecht: "Droit du bail",
     about: "\u00c0 propos",
+    more: "Plus",
+    contact: "Contact",
   },
 
   theme: {
@@ -298,6 +300,27 @@ const fr: Translations = {
     title: "Guide du droit du bail bient\u00f4t disponible",
     text: "Nous pr\u00e9parons des r\u00e9ponses bien structur\u00e9es aux questions les plus fr\u00e9quentes : contester le loyer initial, signaler des d\u00e9fauts, r\u00e9cup\u00e9rer la caution, d\u00e9poser une r\u00e9siliation correctement et plus encore.",
     hint: "En attendant, vous trouverez les informations rapides les plus importantes directement dans l\u2019analyse d\u2019adresse.",
+  },
+
+  contact: {
+    title: "Contact",
+    subtitle: "Tu as des questions, un retour ou tu souhaites collaborer ? \u00c9cris-nous.",
+    firstName: "Pr\u00e9nom",
+    lastName: "Nom",
+    email: "E-mail",
+    message: "Message",
+    send: "Envoyer le message",
+    sending: "Envoi en cours \u2026",
+    sent: "Message envoy\u00e9",
+    sentSub: "Nous te r\u00e9pondrons d\u00e8s que possible.",
+    another: "Envoyer un autre message",
+    required: "Veuillez remplir tous les champs.",
+    emailInvalid: "Veuillez entrer un e-mail valide.",
+    sendError: "L\u2019e-mail n\u2019a pas pu \u00eatre envoy\u00e9. R\u00e9essayez plus tard.",
+    placeholderFirst: "Jean",
+    placeholderLast: "Dupont",
+    placeholderEmail: "jean@exemple.ch",
+    placeholderMessage: "Ton message \u2026",
   },
 } as const;
 
