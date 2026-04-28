@@ -1,11 +1,13 @@
 "use client";
 
 import { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import { useT } from "@/lib/i18n/context";
 
 interface CardProps {
   title: string;
-  icon?: string;
+  /** Either a Lucide icon component (preferred) or a legacy emoji string. */
+  icon?: LucideIcon | string;
   source?: string;
   loading?: boolean;
   error?: string | null;
@@ -25,13 +27,27 @@ export default function Card({
   action,
 }: CardProps) {
   const { t } = useT();
+
+  const renderIcon = () => {
+    if (!icon) return null;
+    if (typeof icon === "string") {
+      return <span className="text-2xl">{icon}</span>;
+    }
+    const Icon = icon;
+    return (
+      <div className="w-9 h-9 rounded-input bg-accent-soft flex items-center justify-center">
+        <Icon className="w-[18px] h-[18px] text-[var(--accent)]" />
+      </div>
+    );
+  };
+
   return (
     <section
-      className={`rounded-2xl bg-ink-elev border border-ink-border p-4 sm:p-6 ${className}`}
+      className={`rounded-card bg-ink-elev border border-ink-border p-4 sm:p-6 shadow-card ${className}`}
     >
-      <header className="flex items-start justify-between gap-4 mb-4">
-        <div className="flex items-center gap-2">
-          {icon && <span className="text-2xl">{icon}</span>}
+      <header className="flex items-start justify-between gap-4 mb-5">
+        <div className="flex items-center gap-3">
+          {renderIcon()}
           <h3 className="font-serif text-xl">{title}</h3>
         </div>
         {action}
@@ -56,8 +72,10 @@ export default function Card({
       {!loading && !error && <div>{children}</div>}
 
       {source && !loading && (
-        <div className="mt-4 pt-4 border-t border-ink-border text-xs text-ink-dim">
-          {t.common.source}: {source}
+        <div className="mt-5 pt-4 border-t border-ink-border">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">
+            {t.common.source}: {source}
+          </span>
         </div>
       )}
     </section>
@@ -83,10 +101,12 @@ export function Metric({
   };
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-ink-dim">
+      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">
         {label}
       </div>
-      <div className={`text-xl sm:text-2xl font-semibold mt-1 ${colors[tone ?? "neutral"]}`}>
+      <div
+        className={`text-xl sm:text-2xl font-semibold mt-1 ${colors[tone ?? "neutral"]}`}
+      >
         {value}
       </div>
       {sub && <div className="text-xs text-ink-mute mt-0.5">{sub}</div>}
@@ -109,7 +129,7 @@ export function Pill({
   };
   return (
     <span
-      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${styles[tone]}`}
+      className={`inline-flex items-center px-3 py-1 rounded-pill text-xs font-medium border ${styles[tone]}`}
     >
       {children}
     </span>

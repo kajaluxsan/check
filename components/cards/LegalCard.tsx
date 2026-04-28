@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Scale } from "lucide-react";
 import Card, { Pill } from "@/components/ui/Card";
 import { useT } from "@/lib/i18n/context";
 import {
@@ -23,7 +24,7 @@ export default function LegalCard({
   return (
     <Card
       title={t.legal.title}
-      icon="⚖️"
+      icon={Scale}
       className="md:col-span-2 xl:col-span-3"
     >
       <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">

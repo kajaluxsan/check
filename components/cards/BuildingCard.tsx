@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Building2 } from "lucide-react";
 import Card, { Metric } from "@/components/ui/Card";
 import { useT } from "@/lib/i18n/context";
 import { fetchGwrBuilding, type GwrBuilding } from "@/lib/api/gwr";
@@ -44,7 +45,7 @@ export default function BuildingCard({
 
   if (!hasHouseNumber) {
     return (
-      <Card title={t.building.title} icon="🏠">
+      <Card title={t.building.title} icon={Building2}>
         <div className="rounded-xl bg-ink-bg border border-ink-border p-4">
           <p className="text-ink-mute text-sm">{t.building.needHouseNumber}</p>
         </div>
@@ -53,7 +54,7 @@ export default function BuildingCard({
   }
 
   return (
-    <Card title={t.building.title} icon="🏠" loading={loading} error={error} className="xl:col-span-2">
+    <Card title={t.building.title} icon={Building2} loading={loading} error={error} className="xl:col-span-2">
       {data ? (
         <>
           {/* Top metrics */}

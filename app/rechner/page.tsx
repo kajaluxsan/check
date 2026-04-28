@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { TrendingDown, Calculator } from "lucide-react";
 import Card, { Metric, Pill } from "@/components/ui/Card";
 import { useT } from "@/lib/i18n/context";
 import { calcAffordability } from "@/lib/calc/affordability";
@@ -45,7 +46,7 @@ function ReferenceRateTool() {
   return (
     <Card
       title={t.rechner.refTitle}
-      icon="📉"
+      icon={TrendingDown}
       source="VMWG Art. 13 \u00b7 BWO"
     >
       <div className="space-y-4 mb-6">
@@ -108,7 +109,7 @@ function AffordabilityTool() {
     result.verdict === "warn" ? "warn" : "bad";
 
   return (
-    <Card title={t.rechner.affordTitle} icon="📊">
+    <Card title={t.rechner.affordTitle} icon={Calculator}>
       <div className="space-y-4 mb-6">
         <FieldInput
           label={t.rechner.affordIncomeLabel}

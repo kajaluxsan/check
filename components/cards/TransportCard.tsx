@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TrainFront } from "lucide-react";
 import Card, { Metric } from "@/components/ui/Card";
 import {
   fetchDepartures,
@@ -71,7 +72,7 @@ export default function TransportCard({ center }: { center: GeoPoint | null }) {
   return (
     <Card
       title={t.transport.title}
-      icon="🚆"
+      icon={TrainFront}
       loading={loading}
       error={error}
     >

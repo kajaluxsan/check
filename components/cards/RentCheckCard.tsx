@@ -1,5 +1,6 @@
 "use client";
 
+import { Coins } from "lucide-react";
 import Card, { Metric, Pill } from "@/components/ui/Card";
 import { checkRent, type RentCheckResult } from "@/lib/calc/rent";
 import { useT } from "@/lib/i18n/context";
@@ -33,7 +34,7 @@ export default function RentCheckCard({
     return (
       <Card
         title={t.rent.title}
-        icon="💰"
+        icon={Coins}
         error={t.rent.noData}
       />
     );
@@ -50,7 +51,7 @@ export default function RentCheckCard({
   return (
     <Card
       title={t.rent.title}
-      icon="💰"
+      icon={Coins}
       action={<Pill tone={tone}>{result.label}</Pill>}
     >
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
