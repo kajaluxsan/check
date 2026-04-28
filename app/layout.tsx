@@ -16,8 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de">
+    <html lang="de" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme")||"dark";if(t==="system"){if(!window.matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("light")}else if(t==="light"){document.documentElement.classList.add("light")}}catch(e){}})()`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
@@ -26,11 +31,6 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-ink-bg text-[var(--fg)] antialiased">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme")||"dark";if(t==="system"){if(!window.matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.classList.add("light")}else if(t==="light"){document.documentElement.classList.add("light")}}catch(e){}})()`,
-          }}
-        />
         <I18nProvider>
           <Nav />
           <main className="flex-1">{children}</main>

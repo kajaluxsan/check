@@ -48,18 +48,14 @@ export default function AddressSearch({
       } bg-ink-elev border border-ink-border shadow-card`}
     >
       <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
-        <div className="relative">
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-dim text-sm">
-            Adresse
-          </span>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder={t.search.addressPlaceholder}
-            className="w-full pl-9 pr-3 py-3 rounded-xl bg-ink-bg border border-ink-border text-white placeholder:text-ink-dim outline-none focus:border-lime-accent transition"
-          />
-        </div>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder={t.search.addressPlaceholder}
+          className="w-full px-3 py-3.5 rounded-input bg-ink-bg border border-ink-border text-[var(--fg)] placeholder:text-ink-dim outline-none focus:border-accent transition"
+        />
+
         <select
           value={rooms}
           onChange={(e) => setRooms(e.target.value)}
