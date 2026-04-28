@@ -1,5 +1,12 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import AnalyseView from "./AnalyseView";
+
+export const metadata: Metadata = {
+  title: "Adress-Analyse",
+  description:
+    "Mietpreis, Umgebung, ÖV, Lärm, Steuern und deine Rechte für eine beliebige Schweizer Adresse.",
+};
 
 export default function AnalysePage() {
   return (
