@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Map as MapIcon } from "lucide-react";
 import Card from "@/components/ui/Card";
 import { useT } from "@/lib/i18n/context";
 import { fetchPois } from "@/lib/api/overpass";
@@ -187,7 +188,7 @@ export default function MapCard({ center }: { center: GeoPoint | null }) {
   );
 
   return (
-    <Card title={t.map.title} icon="🗺️" className="md:col-span-2 xl:col-span-3">
+    <Card title={t.map.title} icon={MapIcon} className="md:col-span-2 xl:col-span-3">
       {!center ? (
         <div className="py-10 text-ink-mute text-sm">{t.common.noCoordinates}</div>
       ) : (

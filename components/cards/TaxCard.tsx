@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Landmark } from "lucide-react";
 import Card, { Metric } from "@/components/ui/Card";
 import { fetchTaxInfo, getTaxRank } from "@/lib/api/tax";
 import { useT } from "@/lib/i18n/context";
@@ -35,7 +36,7 @@ export default function TaxCard({ canton }: { canton: CantonCode | null }) {
   return (
     <Card
       title={t.tax.title}
-      icon="🏛️"
+      icon={Landmark}
       loading={loading}
     >
       {data && (

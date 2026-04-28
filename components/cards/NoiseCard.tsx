@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Volume2 } from "lucide-react";
 import Card from "@/components/ui/Card";
 import { useT } from "@/lib/i18n/context";
 import {
@@ -19,7 +20,7 @@ export default function NoiseCard({ center }: { center: GeoPoint | null }) {
 
   if (!center) {
     return (
-      <Card title={t.noise.title} icon="🔊" error={t.noise.noCoords} />
+      <Card title={t.noise.title} icon={Volume2} error={t.noise.noCoords} />
     );
   }
 
@@ -27,7 +28,7 @@ export default function NoiseCard({ center }: { center: GeoPoint | null }) {
   const url = getNoiseMapUrl(layer, center);
 
   return (
-    <Card title={t.noise.title} icon="🔊">
+    <Card title={t.noise.title} icon={Volume2}>
       <div className="flex gap-2 mb-4">
         <TabButton active={mode === "road"} onClick={() => setMode("road")}>
           {t.noise.road}

@@ -28,17 +28,25 @@ export default function BuildingCard({
     setLoading(true);
     setError(null);
     fetchGwrBuilding(center)
-      .then((r) => { if (!cancelled) setData(r); })
-      .catch(() => { if (!cancelled) setError(t.building.notAvailable); })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
+      .then((r) => {
+        if (!cancelled) setData(r);
+      })
+      .catch(() => {
+        if (!cancelled) setError(t.building.notAvailable);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [center, hasHouseNumber]);
 
   if (!hasHouseNumber) {
     return (
       <Card title={t.building.title} icon={Building2}>
-        <div className="rounded-input bg-ink-bg border border-ink-border p-4">
+        <div className="rounded-xl bg-ink-bg border border-ink-border p-4">
           <p className="text-ink-mute text-sm">{t.building.needHouseNumber}</p>
         </div>
       </Card>
@@ -46,7 +54,7 @@ export default function BuildingCard({
   }
 
   return (
-    <Card title={t.building.title} icon={Building2} loading={loading} error={error}className="xl:col-span-2">
+    <Card title={t.building.title} icon={Building2} loading={loading} error={error} className="xl:col-span-2">
       {data ? (
         <>
           {/* Top metrics */}
@@ -55,27 +63,50 @@ export default function BuildingCard({
               <Metric
                 label={t.building.yearBuilt}
                 value={String(data.buildingYear)}
-                tone={data.buildingYear >= 2010 ? "good" : data.buildingYear >= 1990 ? "neutral" : "warn"}
+                tone={
+                  data.buildingYear >= 2010
+                    ? "good"
+                    : data.buildingYear >= 1990
+                      ? "neutral"
+                      : "warn"
+                }
               />
             )}
-            {data.heatingType && <Metric label={t.building.heatingType} value={data.heatingType} />}
+            {data.heatingType && (
+              <Metric label={t.building.heatingType} value={data.heatingType} />
+            )}
             {data.heatingSource && (
               <Metric
                 label={t.building.energySource}
                 value={data.heatingSource}
-                tone={["Wärmepumpe", "Sonne", "Fernwärme", "Erdwärme", "Luft", "Wasser", "Erdwärme / Wasser"].some((x) => data.heatingSource?.includes(x)) ? "good" : "neutral"}
+                tone={
+                  ["Wärmepumpe", "Sonne", "Fernwärme", "Erdwärme", "Luft", "Wasser", "Erdwärme / Wasser"].some((x) =>
+                    data.heatingSource?.includes(x),
+                  )
+                    ? "good"
+                    : "neutral"
+                }
               />
             )}
             {data.hotWaterType && (
               <Metric label={t.building.hotWater} value={`${data.hotWaterType}${data.hotWaterSource ? ` (${data.hotWaterSource})` : ""}`} />
             )}
           </div>
-{/* Info grid — all fields in one wide grid */}
+
+          {/* Info grid — all fields in one wide grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-            {data.buildingCategory && <InfoRow label={t.building.buildingType} value={data.buildingCategory} />}
-            {data.floors && <InfoRow label={t.building.floors} value={String(data.floors)} />}
-            {data.dwellings && <InfoRow label={t.building.apartments} value={String(data.dwellings)} />}
-            {data.area && <InfoRow label={t.building.area} value={`${data.area} m²`} />}
+            {data.buildingCategory && (
+              <InfoRow label={t.building.buildingType} value={data.buildingCategory} />
+            )}
+            {data.floors && (
+              <InfoRow label={t.building.floors} value={String(data.floors)} />
+            )}
+            {data.dwellings && (
+              <InfoRow label={t.building.apartments} value={String(data.dwellings)} />
+            )}
+            {data.area && (
+              <InfoRow label={t.building.area} value={`${data.area} m²`} />
+            )}
             {data.energyArea && (
               <InfoRow label={t.building.energyArea} value={`${data.energyArea} m²`} />
             )}
@@ -94,12 +125,15 @@ export default function BuildingCard({
             {data.heatingType2 && (
               <InfoRow label={t.building.heating2} value={`${data.heatingType2}${data.heatingSource2 ? ` (${data.heatingSource2})` : ""}`} />
             )}
-            {data.egid && <InfoRow label="EGID" value={data.egid} />}
+            {data.egid && (
+              <InfoRow label="EGID" value={data.egid} />
+            )}
             {data.egrid && (
               <InfoRow label="EGRID" value={data.egrid} />
             )}
           </div>
-{/* Dwelling details table — collapsible */}
+
+          {/* Dwelling details table — collapsible */}
           {data.dwellingDetails && data.dwellingDetails.length > 0 && (
             <details className="mt-4 rounded-xl bg-ink-bg border border-ink-border overflow-hidden">
               <summary className="px-3 py-2.5 cursor-pointer text-xs text-ink-dim uppercase tracking-wide hover:text-ink-mute transition select-none">
@@ -130,12 +164,16 @@ export default function BuildingCard({
                 </table>
               </div>
             </details>
-          )}          {!data.buildingYear && !data.heatingType && !data.buildingCategory && (
+          )}
+
+          {!data.buildingYear && !data.heatingType && !data.buildingCategory && (
             <div className="text-sm text-ink-mute">{t.building.noDetails}</div>
           )}
         </>
       ) : (
-        !loading && !error && <div className="text-sm text-ink-mute">{t.building.noBuilding}</div>
+        !loading && !error && (
+          <div className="text-sm text-ink-mute">{t.building.noBuilding}</div>
+        )
       )}
     </Card>
   );
@@ -143,9 +181,9 @@ export default function BuildingCard({
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-input bg-ink-bg border border-ink-border px-3 py-2.5">
-      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-ink-dim">{label}</div>
-      <div className="text-sm text-[var(--fg)] mt-0.5 truncate">{value}</div>
+    <div className="rounded-lg bg-ink-bg border border-ink-border px-3 py-2.5">
+      <div className="text-[10px] uppercase tracking-wide text-ink-dim">{label}</div>
+      <div className="text-sm text-white mt-0.5 truncate">{value}</div>
     </div>
   );
 }
