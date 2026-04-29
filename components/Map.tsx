@@ -26,6 +26,21 @@ const CATEGORY_ICON: Record<PoiCategory, string> = {
   culture: "🎭",
 };
 
+// Escape user-generated text before injecting into the popup HTML.
+// POI names come from OpenStreetMap and may contain HTML or scripts.
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function buildPopup(name: string, distanceM: number): string {
+  return `<div class="text-sm"><div class="font-semibold">${escapeHtml(name)}</div><div class="text-xs text-neutral-500">${distanceM} m</div></div>`;
+}
+
 function emojiIcon(emoji: string) {
   return L.divIcon({
     className: "",
@@ -115,9 +130,7 @@ export default function Map({
       const marker = L.marker([p.lat, p.lon], {
         icon: emojiIcon(CATEGORY_ICON[p.category]),
       })
-        .bindPopup(
-          `<div class="text-sm"><div class="font-semibold">${p.name}</div><div class="text-xs text-neutral-500">${p.distanceM} m</div></div>`
-        )
+        .bindPopup(buildPopup(p.name, p.distanceM))
         .addTo(map);
       layers.push(marker);
     }

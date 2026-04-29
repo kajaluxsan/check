@@ -110,6 +110,8 @@ export default function KontaktPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  // Honeypot — must stay empty. Hidden from real users via CSS.
+  const [website, setWebsite] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -134,7 +136,7 @@ export default function KontaktPage() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, message }),
+        body: JSON.stringify({ firstName, lastName, email, message, website }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -247,6 +249,20 @@ export default function KontaktPage() {
             className="input resize-none"
           />
         </Field>
+
+        {/* Honeypot — hidden from humans, bots fill it */}
+        <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: "1px", height: "1px", overflow: "hidden" }}>
+          <label>
+            Website (do not fill)
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </label>
+        </div>
 
         {error && (
           <div className="text-sm text-status-bad">{error}</div>

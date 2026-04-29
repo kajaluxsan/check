@@ -4,10 +4,51 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { I18nProvider } from "@/lib/i18n/context";
 
+const SITE_URL = "https://checkmiete.ch";
+
 export const metadata: Metadata = {
-  title: "checkmiete.ch \u2013 Alles was du \u00fcber deine Wohnung wissen musst",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "checkmiete.ch \u2013 Alles was du \u00fcber deine Wohnung wissen musst",
+    template: "%s \u00b7 checkmiete.ch",
+  },
   description:
     "Pr\u00fcfe in Sekunden ob deine Miete fair ist, analysiere die Umgebung und kenne deine Rechte. Kostenlos, ohne Login.",
+  applicationName: "checkmiete.ch",
+  authors: [{ name: "checkmiete.ch" }],
+  keywords: [
+    "Miete",
+    "Mietpreis",
+    "Schweiz",
+    "checkmiete",
+    "fair Miete",
+    "Mietzinssenkung",
+    "Mietrecht",
+    "BFS",
+    "Tragbarkeit",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: "checkmiete.ch",
+    title: "checkmiete.ch \u2013 Alles was du \u00fcber deine Wohnung wissen musst",
+    description:
+      "Pr\u00fcfe in Sekunden ob deine Miete fair ist, analysiere die Umgebung und kenne deine Rechte.",
+    locale: "de_CH",
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "checkmiete.ch",
+    description:
+      "Pr\u00fcfe in Sekunden ob deine Miete fair ist. Kostenlos, ohne Login.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: [{ url: "/favicon.ico" }],
+  },
 };
 
 export default function RootLayout({
