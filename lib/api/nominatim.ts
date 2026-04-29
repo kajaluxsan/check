@@ -1,20 +1,14 @@
 import type { CantonCode, NominatimResult } from "../types";
 
-/**
- * Geocode a free-form Swiss address using OpenStreetMap Nominatim.
- * We restrict to Switzerland and request the addressdetails object so we can
- * extract the canton (ISO3166-2 subdivision).
- */
 export async function geocodeAddress(
   query: string,
 ): Promise<NominatimResult | null> {
   const params = new URLSearchParams({
-    q: query,
-    format: "jsonv2",
+    q: `${query} Schweiz`,
+    format: "json",
     addressdetails: "1",
     limit: "1",
     countrycodes: "ch",
-    "accept-language": "de",
   });
 
   const res = await fetch(
@@ -39,13 +33,16 @@ export async function geocodeAddress(
     lat: parseFloat(raw.lat),
     lon: parseFloat(raw.lon),
     displayName: raw.display_name,
-    city: addr.city,
+    city: addr.city ?? addr.town ?? addr.village,
     town: addr.town,
     village: addr.village,
     postcode: addr.postcode,
     canton: isCanton(iso) ? iso : undefined,
     country: addr.country,
     houseNumber: addr.house_number,
+    suburb: addr.suburb,
+    quartier: addr.suburb ?? addr.city_district,
+    importance: raw.importance ?? 0,
   };
 }
 
@@ -60,10 +57,13 @@ interface RawNominatim {
   lat: string;
   lon: string;
   display_name: string;
+  importance?: number;
   address?: {
     city?: string;
     town?: string;
     village?: string;
+    suburb?: string;
+    city_district?: string;
     postcode?: string;
     country?: string;
     house_number?: string;

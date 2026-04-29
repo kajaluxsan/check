@@ -19,6 +19,9 @@ export interface NominatimResult extends GeoPoint {
   canton?: CantonCode;
   country?: string;
   houseNumber?: string;
+  suburb?: string;
+  quartier?: string;
+  importance: number;
 }
 
 export type PoiCategory =

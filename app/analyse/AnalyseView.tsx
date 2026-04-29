@@ -81,6 +81,12 @@ export default function AnalyseView() {
             <Chip>{rooms} Zi.</Chip>
             <Chip>{new Intl.NumberFormat("de-CH").format(rent)} CHF</Chip>
             {geo.canton && <Chip>{geo.canton}</Chip>}
+            {geo.quartier && <Chip>{geo.quartier}</Chip>}
+          </div>
+        )}
+        {geo && geo.importance < 0.3 && (
+          <div className="mt-2 text-xs text-status-warn">
+            ⚠ Adresse nicht eindeutig gefunden — Ergebnisse können ungenau sein
           </div>
         )}
       </div>
